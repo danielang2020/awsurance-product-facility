@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package com.danielang.productfacility.grpc.dto;
+
+message Product{
+  string tenant = 1; // tenant id, for multi-tenancy
+  string code = 2; // product code
+  string type = 3; // product type, basic or rider
+  string name = 4; // product name
+  string abbrevName = 5; // product abbreviation name
+  string category = 6; // product category, accident/dread disease/ILP/mortgage/health/term/whole life/endowment
+  string currency = 7; // product currency
+  string description = 8; // product description, base64 encoded
+  string parType = 9; // participating/non-participating
+  string coverType = 10; // cover type, individual/joint/family
+  string startDate = 11; // product start date
+  string endDate = 12; // product end date
+
+  repeated Indicator indicators = 13; // product indicators
+}
+
+message Indicator{
+  string name = 1; // indicator name
+  string value = 2; // indicator value
+}
