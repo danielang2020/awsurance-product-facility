@@ -1,6 +1,10 @@
 syntax = "proto3";
 
-package com.danielang.productfacility.grpc.dto;
+option java_multiple_files = true;
+option java_package = "com.danielang.productfacility.grpc";
+
+
+package com.danielang.productfacility.grpc;
 
 message Product{
   string tenant = 1; // tenant id, for multi-tenancy
@@ -8,7 +12,7 @@ message Product{
   string type = 3; // product type, basic or rider
   string name = 4; // product name
   string abbrevName = 5; // product abbreviation name
-  string category = 6; // product category, accident/dread disease/ILP/mortgage/health/term/whole life/endowment
+  string category = 6; // product category, whole life / term life/ mortgage / ilp / health / endowment / dread disease / accident
   string currency = 7; // product currency
   string description = 8; // product description, base64 encoded
   string parType = 9; // participating/non-participating
@@ -20,6 +24,15 @@ message Product{
 }
 
 message Indicator{
-  string name = 1; // indicator name
+  string key = 1; // indicator name
   string value = 2; // indicator value
+}
+
+message CommonResponse{
+  string code = 1; // response code
+}
+
+
+service ProductService {
+  rpc CreateProduct (Product) returns (CommonResponse) {}
 }
