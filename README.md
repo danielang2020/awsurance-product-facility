@@ -60,3 +60,9 @@ If you want to learn more about building native executables, please consult <htt
 Easily start your REST Web Services
 
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+
+Design:
+1. sort some rateFactor in a rate table by alphabetical order
+2. match a rate table record using sorted string value
+e.g. rate table record: {rateFactor: "A", rate: 1.0}
+

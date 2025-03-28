@@ -1,12 +1,13 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "com.danielang.productfacility.grpc";
+option java_package = "com.danielang.productfacility.controller.grpc";
 
 
-package com.danielang.productfacility.grpc;
+package com.danielang.productfacility.controller.grpc;
 
-message Product{
+message ProductDTO{
+  // tenant + code = unique key
   string tenant = 1; // tenant id, for multi-tenancy
   string code = 2; // product code
   string type = 3; // product type, basic or rider
@@ -17,22 +18,56 @@ message Product{
   string description = 8; // product description, base64 encoded
   string parType = 9; // participating/non-participating
   string coverType = 10; // cover type, individual/joint/family
-  string startDate = 11; // product start date
-  string endDate = 12; // product end date
+  int64 startDate = 11; // product start date
+  int64 endDate = 12; // product end date
 
-  repeated Indicator indicators = 13; // product indicators
+  repeated IndicatorDTO indicators = 13; // product indicators
 }
 
-message Indicator{
+message IndicatorDTO{
   string key = 1; // indicator name
   string value = 2; // indicator value
 }
 
+message RateFactorDTO{
+  string name = 1; // rate factor name
+}
+
+message RateDTO{
+  repeated RateFactorDTO factors = 1; // rate factors
+}
+
+message RateTableDTO{
+  string name = 1; // rate table name
+  repeated RateDTO rates = 2; // rates
+}
+
 message CommonResponse{
   string code = 1; // response code
+  repeated CommonResponseDetail details = 2; // response details
+}
+
+message CommonResponseDetail{
+  string key = 1; // response code
+  string value = 2; // response message
+}
+
+message FormulaDTO{
+  string name = 1; // formula name
+  string expression = 2; // formula expression
+}
+
+message AddingFormulaDTO{
+  string tenant = 1; // tenant id
+  string productCode = 2; // product code
+  string formulaName = 3; // formula name
+  string rateTableName = 4; // rate table name
 }
 
 
 service ProductService {
-  rpc CreateProduct (Product) returns (CommonResponse) {}
+  rpc CreateProduct (ProductDTO) returns (CommonResponse) {}
+  rpc CreateRateTable(RateTableDTO) returns (CommonResponse) {}
+  rpc createFormula(FormulaDTO) returns (CommonResponse) {}
+  rpc UpdateProductByAddingFormula (AddingFormulaDTO) returns (CommonResponse) {}
 }

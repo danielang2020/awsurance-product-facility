@@ -3,8 +3,8 @@ package com.danielang.productfacility.domain.aggregate;
 
 import com.danielang.productfacility.domain.entity.Formula;
 import com.danielang.productfacility.domain.entity.Indicator;
+import com.danielang.productfacility.domain.entity.RateTable;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,11 +23,13 @@ public class Product {
 	private String category;
 	private String currency;
 	private String description;
-	private Date startDate;
-	private Date endDate;
+	private long startDate;
+	private long endDate;
 	private List<Indicator> indicators;
 
 	private List<Formula> formulas;
+
+	private List<RateTable> rateTables;
 
 	public String getTenant() {
 		return tenant;
@@ -93,19 +95,19 @@ public class Product {
 		this.description = description;
 	}
 
-	public Date getStartDate() {
+	public long getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(long startDate) {
 		this.startDate = startDate;
 	}
 
-	public Date getEndDate() {
+	public long getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(long endDate) {
 		this.endDate = endDate;
 	}
 
@@ -123,5 +125,59 @@ public class Product {
 
 	public void setFormulas(List<Formula> formulas) {
 		this.formulas = formulas;
+	}
+
+	public List<RateTable> getRateTables() {
+		return rateTables;
+	}
+
+	public void setRateTables(List<RateTable> rateTables) {
+		this.rateTables = rateTables;
+	}
+
+	public void validate() {
+		isNullOrBlank(tenant,"product tenant");
+
+		isNullOrBlank(code,"product code");
+
+		isNullOrBlank(type,"product type");
+
+		isNullOrBlank(name, "product name");
+
+		isNullOrBlank(category,"product category");
+
+		isNullOrBlank(currency,"product currency");
+
+		isNullOrBlank(description,"product description");
+
+		if(startDate == 0) {
+			throw new IllegalArgumentException("Start Date is required");
+		}
+
+		if(endDate == 0) {
+			throw new IllegalArgumentException("End Date is required");
+		}
+
+		if(endDate < startDate) {
+			throw new IllegalArgumentException("End Date must be greater than Start Date");
+		}
+
+		if (indicators != null && !indicators.isEmpty()) {
+			indicators.forEach(Indicator::validate);
+		}
+
+		if(formulas != null && !formulas.isEmpty()) {
+			formulas.forEach(Formula::validate);
+		}
+
+		if(rateTables != null && !rateTables.isEmpty()) {
+			rateTables.forEach(RateTable::validate);
+		}
+	}
+
+	private static void isNullOrBlank(String str,String fieldName) {
+		if(str == null || str.isBlank()){
+			throw new IllegalArgumentException(fieldName + " is required");
+		}
 	}
 }
