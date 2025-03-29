@@ -23,7 +23,7 @@ public class ProductUseCaseService {
 		this.productRepository = productRepository;
 	}
 
-	public void createProduct(ProductDTO productDTO) {
+	public boolean createProduct(ProductDTO productDTO) {
 		var product = new Product();
 		product.setTenant(productDTO.getTenant());
 		product.setCode(productDTO.getCode());
@@ -54,7 +54,7 @@ public class ProductUseCaseService {
 				product.getCurrency(), product.getDescription(), "admin", "admin", product.getStartDate(),
 				product.getEndDate(), now,now, indicatorEntities);
 
-		productRepository.save(productEntity);
+		return productRepository.save(productEntity);
 	}
 
 	public void createRateTable() {

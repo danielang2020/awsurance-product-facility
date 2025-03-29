@@ -9,11 +9,18 @@ import com.danielang.productfacility.db.entity.RateTableEntity;
  * @author: Daniel
  * @create: 2025-03-27 18:28
  **/
-public interface ProductRepository {
-	  void save(ProductEntity productEntity);
-	  void delete();
-	  void updateByAddingRateTable(String tenant, String code, RateTableEntity rateTableEntity);
-	  void updateByAddingFormula(String tenant, String code, FormulaEntity formulaEntity);
-	  ProductEntity findByCode(String code);
-	  ProductEntity findByTenantAndCode(String tenant, String code);
+public sealed interface ProductRepository permits ProductDynamodbRepository {
+	boolean save(ProductEntity productEntity);
+
+	void update(ProductEntity productEntity);
+
+	void delete();
+
+	void updateByAddingRateTable(String tenant, String code, RateTableEntity rateTableEntity);
+
+	void updateByAddingFormula(String tenant, String code, FormulaEntity formulaEntity);
+
+	ProductEntity findByCode(String code);
+
+	ProductEntity findByTenantAndCode(String tenant, String code);
 }
