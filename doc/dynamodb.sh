@@ -1,4 +1,4 @@
-docker run -d --publish 4566:8000 amazon/dynamodb-local:1.19.0 -jar DynamoDBLocal.jar -inMemory -sharedDb
+docker run -d --publish 4566:8000 amazon/dynamodb-local:2.6.0 -jar DynamoDBLocal.jar -inMemory -sharedDb
 
 aws dynamodb create-table --table-name InsuranceProduct \
                           --key-schema AttributeName=tenant,KeyType=HASH AttributeName=code,KeyType=RANGE \

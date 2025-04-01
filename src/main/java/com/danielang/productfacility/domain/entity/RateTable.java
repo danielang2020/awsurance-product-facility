@@ -11,6 +11,13 @@ public class RateTable {
 	private String name;
 	private List<Rate> rates;
 
+	public RateTable(RateTable rateTable) {
+		this.name = rateTable.getName();
+		this.rates = (rateTable.rates != null && !rateTable.rates.isEmpty()) ?
+				rateTable.rates.stream().map(Rate::new).toList() :
+				List.of();
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -34,7 +41,7 @@ public class RateTable {
 
 		if (rates == null || rates.isEmpty()) {
 			throw new IllegalArgumentException("Rate Table Rates is required");
-		}else{
+		} else {
 			rates.forEach(Rate::validate);
 		}
 	}

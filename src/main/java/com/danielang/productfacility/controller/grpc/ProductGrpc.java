@@ -27,7 +27,7 @@ public class ProductGrpc implements ProductService {
 
 
 	@Override
-	public Uni<CommonResponse> createProduct(ProductDTO request) {
+	public Uni<CommonResponse> createProduct(final ProductDTO request) {
 		try {
 			if (productUseCaseService.createProduct(request)) {
 				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setCode("ok").build());

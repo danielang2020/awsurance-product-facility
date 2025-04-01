@@ -5,9 +5,19 @@ package com.danielang.productfacility.domain.entity;
  * @author: Daniel
  * @create: 2025-03-15 17:59
  **/
-public class Indicator {
+public class Indicator{
 	private String key;
 	private String value;
+
+	public Indicator(String key, String value) {
+		this.key = key;
+		this.value = value;
+	}
+
+	public Indicator(Indicator indicator) {
+		this.key = indicator.getKey();
+		this.value = indicator.getValue();
+	}
 
 	public String getKey() {
 		return key;
@@ -26,11 +36,11 @@ public class Indicator {
 	}
 
 	public void validate() {
-		if(key == null || key.isEmpty()) {
+		if (key == null || key.isEmpty()) {
 			throw new IllegalArgumentException("Indicator key is required");
 		}
 
-		if(value == null || value.isEmpty()) {
+		if (value == null || value.isEmpty()) {
 			throw new IllegalArgumentException("Indicator value is required");
 		}
 	}

@@ -9,6 +9,11 @@ public class RateFactor {
 	private String name;
 	private String value;
 
+	public RateFactor(RateFactor rateFactor) {
+		this.name = rateFactor.getName();
+		this.value = rateFactor.getValue();
+	}
+
 	public String getName() {
 		return name;
 	}

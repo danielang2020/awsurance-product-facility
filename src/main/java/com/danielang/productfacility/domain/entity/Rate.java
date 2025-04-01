@@ -10,6 +10,12 @@ import java.util.List;
 public class Rate {
 	private List<RateFactor> rateFactors;
 
+	public Rate(Rate rate) {
+		this.rateFactors = (rate.rateFactors != null && !rate.rateFactors.isEmpty()) ?
+				rate.rateFactors.stream().map(RateFactor::new).toList() :
+				List.of();
+	}
+
 	public List<RateFactor> getRateFactors() {
 		return rateFactors;
 	}
@@ -21,7 +27,7 @@ public class Rate {
 	public void validate() {
 		if (rateFactors == null || rateFactors.isEmpty()) {
 			throw new IllegalArgumentException("Rate Factors is required");
-		}else{
+		} else {
 			rateFactors.forEach(RateFactor::validate);
 		}
 	}

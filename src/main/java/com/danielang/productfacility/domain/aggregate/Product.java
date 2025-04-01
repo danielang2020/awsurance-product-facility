@@ -14,7 +14,7 @@ import java.util.List;
  * @author: Daniel
  * @create: 2025-03-14 23:05
  **/
-public class Product {
+public final class Product {
 	private String tenant;
 	private String code;
 	private String type;
@@ -30,6 +30,12 @@ public class Product {
 	private List<Formula> formulas;
 
 	private List<RateTable> rateTables;
+
+	private static void isNullOrBlank(String str, String fieldName) {
+		if (str == null || str.isBlank()) {
+			throw new IllegalArgumentException(fieldName + " is required");
+		}
+	}
 
 	public String getTenant() {
 		return tenant;
@@ -116,7 +122,10 @@ public class Product {
 	}
 
 	public void setIndicators(List<Indicator> indicators) {
-		this.indicators = indicators;
+		// immutable deep copy list
+		this.indicators = (indicators != null && !indicators.isEmpty()) ?
+				indicators.stream().map(Indicator::new).toList() :
+				List.of();
 	}
 
 	public List<Formula> getFormulas() {
@@ -124,7 +133,9 @@ public class Product {
 	}
 
 	public void setFormulas(List<Formula> formulas) {
-		this.formulas = formulas;
+		this.formulas = (formulas != null && !formulas.isEmpty()) ?
+				formulas.stream().map(Formula::new).toList() :
+				List.of();
 	}
 
 	public List<RateTable> getRateTables() {
@@ -132,33 +143,35 @@ public class Product {
 	}
 
 	public void setRateTables(List<RateTable> rateTables) {
-		this.rateTables = rateTables;
+		this.rateTables = (rateTables != null && !rateTables.isEmpty()) ?
+				rateTables.stream().map(RateTable::new).toList() :
+				List.of();
 	}
 
 	public void validate() {
-		isNullOrBlank(tenant,"product tenant");
+		isNullOrBlank(tenant, "product tenant");
 
-		isNullOrBlank(code,"product code");
+		isNullOrBlank(code, "product code");
 
-		isNullOrBlank(type,"product type");
+		isNullOrBlank(type, "product type");
 
 		isNullOrBlank(name, "product name");
 
-		isNullOrBlank(category,"product category");
+		isNullOrBlank(category, "product category");
 
-		isNullOrBlank(currency,"product currency");
+		isNullOrBlank(currency, "product currency");
 
-		isNullOrBlank(description,"product description");
+		isNullOrBlank(description, "product description");
 
-		if(startDate == 0) {
+		if (startDate == 0) {
 			throw new IllegalArgumentException("Start Date is required");
 		}
 
-		if(endDate == 0) {
+		if (endDate == 0) {
 			throw new IllegalArgumentException("End Date is required");
 		}
 
-		if(endDate < startDate) {
+		if (endDate < startDate) {
 			throw new IllegalArgumentException("End Date must be greater than Start Date");
 		}
 
@@ -166,18 +179,12 @@ public class Product {
 			indicators.forEach(Indicator::validate);
 		}
 
-		if(formulas != null && !formulas.isEmpty()) {
+		if (formulas != null && !formulas.isEmpty()) {
 			formulas.forEach(Formula::validate);
 		}
 
-		if(rateTables != null && !rateTables.isEmpty()) {
+		if (rateTables != null && !rateTables.isEmpty()) {
 			rateTables.forEach(RateTable::validate);
-		}
-	}
-
-	private static void isNullOrBlank(String str,String fieldName) {
-		if(str == null || str.isBlank()){
-			throw new IllegalArgumentException(fieldName + " is required");
 		}
 	}
 }

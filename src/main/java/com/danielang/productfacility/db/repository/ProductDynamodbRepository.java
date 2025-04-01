@@ -18,7 +18,9 @@ import java.util.HashMap;
  **/
 @ApplicationScoped
 public final class ProductDynamodbRepository implements ProductRepository {
-	private static final String PRODUCT_TABLE_NAME = "InsuranceProduct";
+	public static final String PRODUCT_TABLE_NAME = "InsuranceProduct";
+	public static final String PRODUCT_TABLE_HASH_KEY = "tenant";
+	public static final String PRODUCT_TABLE_RANGE_KEY = "code";
 	DynamoDbClient dynamoDB;
 
 	public ProductDynamodbRepository(DynamoDbClient dynamoDB) {
@@ -28,8 +30,8 @@ public final class ProductDynamodbRepository implements ProductRepository {
 	@Override
 	public boolean save(ProductEntity productEntity) {
 		var item = new HashMap<String, AttributeValue>();
-		item.put("tenant", AttributeValue.builder().s(productEntity.tenant()).build());
-		item.put("code", AttributeValue.builder().s(productEntity.code()).build());
+		item.put(PRODUCT_TABLE_HASH_KEY, AttributeValue.builder().s(productEntity.tenant()).build());
+		item.put(PRODUCT_TABLE_RANGE_KEY, AttributeValue.builder().s(productEntity.code()).build());
 		item.put("type", AttributeValue.builder().s(productEntity.type()).build());
 		item.put("name", AttributeValue.builder().s(productEntity.name()).build());
 		item.put("abbrevName", AttributeValue.builder().s(productEntity.abbrevName()).build());
@@ -49,6 +51,8 @@ public final class ProductDynamodbRepository implements ProductRepository {
 				.build();
 
 		PutItemResponse putItemResponse = dynamoDB.putItem(putItemRequest);
+
+		//todo log all updated field values
 
 		return putItemResponse.sdkHttpResponse().isSuccessful();
 	}

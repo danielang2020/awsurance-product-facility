@@ -10,6 +10,16 @@ public class Formula {
 	private String name;
 	private String expression;
 
+	public Formula(String name, String expression) {
+		this.name = name;
+		this.expression = expression;
+	}
+
+	public Formula(Formula formula) {
+		this.name = formula.getName();
+		this.expression = formula.getExpression();
+	}
+
 	public String getName() {
 		return name;
 	}
