@@ -1,6 +1,7 @@
 package com.danielang.productfacility.db;
 
 import com.danielang.productfacility.db.repository.ProductDynamodbRepository;
+import com.danielang.productfacility.db.repository.RateTableDynamodbRepository;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import org.testcontainers.containers.localstack.LocalStackContainer;
@@ -47,10 +48,22 @@ public class DynamoDBTestResource implements QuarkusTestResourceLifecycleManager
 								.attributeName(ProductDynamodbRepository.PRODUCT_TABLE_RANGE_KEY).attributeType("S")
 								.build())).billingMode(BillingMode.PAY_PER_REQUEST).build());
 
+
+		dynamoDbClient.createTable(CreateTableRequest.builder().tableName(RateTableDynamodbRepository.RATETABLE_TABLE_NAME)
+				.keySchema(List.of(KeySchemaElement.builder()
+								.attributeName(RateTableDynamodbRepository.RATETABLE_TABLE_HASH_KEY).keyType(KeyType.HASH).build(),
+						KeySchemaElement.builder().attributeName(RateTableDynamodbRepository.RATETABLE_TABLE_RANGE_KEY)
+								.keyType(KeyType.RANGE).build())).attributeDefinitions(
+						List.of(AttributeDefinition.builder()
+								.attributeName(RateTableDynamodbRepository.RATETABLE_TABLE_HASH_KEY).attributeType("S")
+								.build(), AttributeDefinition.builder()
+								.attributeName(RateTableDynamodbRepository.RATETABLE_TABLE_RANGE_KEY).attributeType("S")
+								.build())).billingMode(BillingMode.PAY_PER_REQUEST).build());
+
 		return Map.of("quarkus.dynamodb.endpoint-override", dynamoDbEndpoint, "quarkus.dynamodb.aws.region",
 				"us-east-1", "quarkus.dynamodb.aws.credentials.type", "static",
-				"quarkus.dynamodb.aws.credentials.static-provider.access-key-id", "accessKey1",
-				"quarkus.dynamodb.aws.credentials.static-provider.secret-access-key", "secretKey2");
+				"quarkus.dynamodb.aws.credentials.static-provider.access-key-id", "localAccessKeyId",
+				"quarkus.dynamodb.aws.credentials.static-provider.secret-access-key", "localSecretAccessKey");
 	}
 
 	@Override

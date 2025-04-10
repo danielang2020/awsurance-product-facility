@@ -30,31 +30,50 @@ public class ProductGrpc implements ProductService {
 	public Uni<CommonResponse> createProduct(final ProductDTO request) {
 		try {
 			if (productUseCaseService.createProduct(request)) {
-				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setCode("ok").build());
+				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("ok").build());
 			} else {
-				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setCode("fail").build());
+				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("fail").build());
 			}
 		} catch (Exception e) {
-			logger.error("createProduct",e);
-			CommonResponseDetail detail = CommonResponseDetail.newBuilder().setKey("msg").setValue(e.getMessage())
-					.build();
+			logger.error("createProductException", e);
+			CommonResponseDetail detail = CommonResponseDetail.newBuilder().setResponseDetailKey("msg")
+					.setResponseDetailValue(e.getMessage()).build();
 			return Uni.createFrom()
-					.item(() -> CommonResponse.newBuilder().setCode("error").addAllDetails(List.of(detail)).build());
+					.item(() -> CommonResponse.newBuilder().setResponseCode("error").addAllDetails(List.of(detail))
+							.build());
 		}
 	}
 
 	@Override
-	public Uni<CommonResponse> createRateTable(RateTableDTO request) {
+	public Uni<CommonResponse> createRateTable(final RateTableDTO request) {
+		try {
+			if (productUseCaseService.createRateTable(request)) {
+				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("ok").build());
+			} else {
+				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("fail").build());
+			}
+		} catch (Exception e) {
+			logger.error("createRateTableException", e);
+			CommonResponseDetail detail = CommonResponseDetail.newBuilder().setResponseDetailKey("msg")
+					.setResponseDetailValue(e.getMessage()).build();
+			return Uni.createFrom()
+					.item(() -> CommonResponse.newBuilder().setResponseCode("error").addAllDetails(List.of(detail))
+							.build());
+		}
+	}
+
+	@Override
+	public Uni<CommonResponse> createFormula(final FormulaDTO request) {
 		return null;
 	}
 
 	@Override
-	public Uni<CommonResponse> createFormula(FormulaDTO request) {
+	public Uni<CommonResponse> updateProductByAddingFormula(final AddingFormulaDTO request) {
 		return null;
 	}
 
 	@Override
-	public Uni<CommonResponse> updateProductByAddingFormula(AddingFormulaDTO request) {
+	public Uni<CommonResponse> updateProductByAddingRateTable(AddingRateTableDTO request) {
 		return null;
 	}
 }

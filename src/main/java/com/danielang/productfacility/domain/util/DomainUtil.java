@@ -30,19 +30,19 @@ public class DomainUtil {
 
 	public static Product buildProduct(ProductDTO productDTO) {
 		var product = new Product();
-		product.setTenant(productDTO.getTenant());
-		product.setCode(productDTO.getCode());
-		product.setType(productDTO.getType());
-		product.setName(productDTO.getName());
-		product.setAbbrevName(productDTO.getAbbrevName());
-		product.setCategory(productDTO.getCategory());
-		product.setCurrency(productDTO.getCurrency());
-		product.setDescription(productDTO.getDescription());
-		product.setStartDate(productDTO.getStartDate());
-		product.setEndDate(productDTO.getEndDate());
+		product.setTenant(productDTO.getInsuranceTenant());
+		product.setCode(productDTO.getProductCode());
+		product.setType(productDTO.getProductType());
+		product.setName(productDTO.getProductName());
+		product.setAbbrevName(productDTO.getProductAbbrevName());
+		product.setCategory(productDTO.getProductCategory());
+		product.setCurrency(productDTO.getProductCurrency());
+		product.setDescription(productDTO.getProductDescription());
+		product.setStartDate(productDTO.getProductStartDate());
+		product.setEndDate(productDTO.getProductEndDate());
 
 		List<Indicator> indicators = productDTO.getIndicatorsList().stream()
-				.map(e -> new Indicator(e.getKey(), e.getValue())).toList();
+				.map(e -> new Indicator(e.getIndicatorKey(), e.getIndicatorValue())).toList();
 
 		product.setIndicators(indicators);
 

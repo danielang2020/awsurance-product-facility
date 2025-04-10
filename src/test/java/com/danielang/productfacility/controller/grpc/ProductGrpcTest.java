@@ -20,12 +20,22 @@ class ProductGrpcTest {
 
 	@Test
 	void testCreateProduct() {
-		ProductDTO productDTO = ProductDTO.newBuilder().setTenant("HSBC" + System.currentTimeMillis()).setCode("test").setType("test")
-				.setName("test").setAbbrevName("test").setCategory("test").setCurrency("CNY").setDescription("test")
-				.setStartDate(System.currentTimeMillis()).setEndDate(System.currentTimeMillis())
-				.addIndicators(IndicatorDTO.newBuilder().setKey("key").setValue("value").build()).build();
+		ProductDTO productDTO = ProductDTO.newBuilder().setInsuranceTenant("HSBC" + System.currentTimeMillis()).setProductCode("test").setProductType("test")
+				.setProductName("test").setProductAbbrevName("test").setProductCategory("test").setProductCurrency("CNY").setProductDescription("test")
+				.setProductStartDate(System.currentTimeMillis()).setProductEndDate(System.currentTimeMillis())
+				.addIndicators(IndicatorDTO.newBuilder().setIndicatorKey("key").setIndicatorValue("value").build()).build();
 
 		CommonResponse indefinitely = client.createProduct(productDTO).await().indefinitely();
-		assertThat(indefinitely.getCode(), equalTo("ok"));
+		assertThat(indefinitely.getResponseCode(), equalTo("ok"));
+	}
+
+	@Test
+	void testCreateRateTable() {
+		RateTableDTO rateTableDTO = RateTableDTO.newBuilder().setInsuranceTenant("HSBC" + System.currentTimeMillis()).setRateTableCode("test")
+				.setRateTableFactors("a,b,c").addRates(RateDTO.newBuilder().setRateFormat("1,2,3").setRateValue(1.0).build()).build();
+
+
+		CommonResponse indefinitely = client.createRateTable(rateTableDTO).await().indefinitely();
+		assertThat(indefinitely.getResponseCode(), equalTo("ok"));
 	}
 }

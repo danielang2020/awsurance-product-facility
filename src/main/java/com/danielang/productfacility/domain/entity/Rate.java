@@ -1,6 +1,6 @@
 package com.danielang.productfacility.domain.entity;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 /**
  * @program: awsurance-product-facility
@@ -8,27 +8,34 @@ import java.util.List;
  * @create: 2025-03-26 18:34
  **/
 public class Rate {
-	private List<RateFactor> rateFactors;
+	private final String format;
+	private final BigDecimal value;
 
 	public Rate(Rate rate) {
-		this.rateFactors = (rate.rateFactors != null && !rate.rateFactors.isEmpty()) ?
-				rate.rateFactors.stream().map(RateFactor::new).toList() :
-				List.of();
+		this.format = rate.getFormat();
+		this.value = rate.getValue();
 	}
 
-	public List<RateFactor> getRateFactors() {
-		return rateFactors;
+	public Rate(String format,BigDecimal value) {
+		this.format = format;
+		this.value = value;
 	}
 
-	public void setRateFactors(List<RateFactor> rateFactors) {
-		this.rateFactors = rateFactors;
+	public String getFormat() {
+		return format;
+	}
+
+	public BigDecimal getValue() {
+		return value;
 	}
 
 	public void validate() {
-		if (rateFactors == null || rateFactors.isEmpty()) {
-			throw new IllegalArgumentException("Rate Factors is required");
-		} else {
-			rateFactors.forEach(RateFactor::validate);
+		if(format == null || format.isEmpty()) {
+			throw new IllegalArgumentException("Rate format cannot be null or empty");
+		}
+
+		if(value == null) {
+			throw new IllegalArgumentException("Rate value cannot be null");
 		}
 	}
 }

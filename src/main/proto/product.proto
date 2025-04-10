@@ -8,60 +8,67 @@ package com.danielang.productfacility.controller.grpc;
 
 message ProductDTO{
   // tenant + code = unique key
-  string tenant = 1; // tenant id, for multi-tenancy
-  string code = 2; // product code
-  string type = 3; // product type, basic or rider
-  string name = 4; // product name
-  string abbrevName = 5; // product abbreviation name
-  string category = 6; // product category, whole life / term life/ mortgage / ilp / health / endowment / dread disease / accident
-  string currency = 7; // product currency
-  string description = 8; // product description, base64 encoded
-  string parType = 9; // participating/non-participating
-  string coverType = 10; // cover type, individual/joint/family
-  int64 startDate = 11; // product start date
-  int64 endDate = 12; // product end date
+  string insuranceTenant = 1; // tenant id, for multi-tenancy
+  string productCode = 2; // product code
+  string productType = 3; // product type, basic or rider
+  string productName = 4; // product name
+  string productAbbrevName = 5; // product abbreviation name
+  string productCategory = 6; // product category, whole life / term life/ mortgage / ilp / health / endowment / dread disease / accident
+  string productCurrency = 7; // product currency
+  string productDescription = 8; // product description, base64 encoded
+  int64 productStartDate = 9; // product start date
+  int64 productEndDate = 10; // product end date
 
-  repeated IndicatorDTO indicators = 13; // product indicators
+  repeated IndicatorDTO indicators = 11; // product indicators
 }
 
 message IndicatorDTO{
-  string key = 1; // indicator name
-  string value = 2; // indicator value
+  string indicatorKey = 1; // indicator name
+  string indicatorValue = 2; // indicator value
 }
 
-message RateFactorDTO{
-  string name = 1; // rate factor name
-}
 
 message RateDTO{
-  repeated RateFactorDTO factors = 1; // rate factors
+  string rateFormat = 1; // rate factors value, separated by comma
+  double rateValue = 2; // related rate value
 }
 
 message RateTableDTO{
-  string name = 1; // rate table name
-  repeated RateDTO rates = 2; // rates
+  // tenant + code = unique key
+  string insuranceTenant = 1; // tenant id, for multi-tenancy
+  string rateTableCode = 2; // rate table name
+  string rateTableDescription = 3; // rate table description, base64 encoded
+  string rateTableFactors = 4; // rate factors, separated by comma
+  repeated RateDTO rates = 5; // rates
 }
 
 message CommonResponse{
-  string code = 1; // response code
+  string responseCode = 1; // response code
   repeated CommonResponseDetail details = 2; // response details
 }
 
 message CommonResponseDetail{
-  string key = 1; // response code
-  string value = 2; // response message
+  string responseDetailKey = 1; // response code
+  string responseDetailValue = 2; // response message
 }
 
 message FormulaDTO{
-  string name = 1; // formula name
-  string expression = 2; // formula expression
+  string insuranceTenant = 1; // tenant id, for multi-tenancy
+  string formulaCode = 2; // formula code
+  string formulaDescription = 3; // formula description, base64 encoded
+  string formulaExpression = 4; // formula expression
 }
 
 message AddingFormulaDTO{
-  string tenant = 1; // tenant id
+  string insuranceTenant = 1; // tenant id
   string productCode = 2; // product code
-  string formulaName = 3; // formula name
-  string rateTableName = 4; // rate table name
+  string formulaCode = 3; // formula code
+}
+
+message AddingRateTableDTO{
+  string insuranceTenant = 1; // tenant id
+  string productCode = 2; // product code
+  string rateTableCode = 3; // rate table code
 }
 
 
@@ -70,4 +77,5 @@ service ProductService {
   rpc CreateRateTable(RateTableDTO) returns (CommonResponse) {}
   rpc createFormula(FormulaDTO) returns (CommonResponse) {}
   rpc UpdateProductByAddingFormula (AddingFormulaDTO) returns (CommonResponse) {}
+  rpc UpdateProductByAddingRateTable (AddingRateTableDTO) returns (CommonResponse) {}
 }
