@@ -7,6 +7,6 @@ import com.danielang.productfacility.db.entity.RateTableEntity;
  * @author: Daniel
  * @create: 2025-04-01 22:43
  **/
-public interface RateTableRepository {
+public sealed interface RateTableRepository permits RateTableDynamodbRepository {
 	boolean save(RateTableEntity rateTableEntity);
 }

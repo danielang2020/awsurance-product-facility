@@ -20,7 +20,5 @@ public sealed interface ProductRepository permits ProductDynamodbRepository {
 
 	void updateByAddingFormula(String tenant, String code, FormulaEntity formulaEntity);
 
-	ProductEntity findByCode(String code);
-
 	ProductEntity findByTenantAndCode(String tenant, String code);
 }

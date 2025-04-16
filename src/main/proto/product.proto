@@ -57,6 +57,7 @@ message FormulaDTO{
   string formulaCode = 2; // formula code
   string formulaDescription = 3; // formula description, base64 encoded
   string formulaExpression = 4; // formula expression
+  repeated string formulaParameters = 5; // formula parameters
 }
 
 message AddingFormulaDTO{

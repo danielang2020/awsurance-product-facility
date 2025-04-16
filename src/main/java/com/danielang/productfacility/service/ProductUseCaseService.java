@@ -4,10 +4,13 @@ import com.danielang.productfacility.controller.grpc.FormulaDTO;
 import com.danielang.productfacility.controller.grpc.ProductDTO;
 import com.danielang.productfacility.controller.grpc.RateDTO;
 import com.danielang.productfacility.controller.grpc.RateTableDTO;
+import com.danielang.productfacility.db.entity.FormulaEntity;
 import com.danielang.productfacility.db.entity.RateEntity;
 import com.danielang.productfacility.db.entity.RateTableEntity;
+import com.danielang.productfacility.db.repository.FormulaRepository;
 import com.danielang.productfacility.db.repository.ProductRepository;
 import com.danielang.productfacility.db.repository.RateTableRepository;
+import com.danielang.productfacility.domain.entity.Formula;
 import com.danielang.productfacility.domain.entity.Rate;
 import com.danielang.productfacility.domain.entity.RateTable;
 import com.danielang.productfacility.domain.util.DomainUtil;
@@ -25,10 +28,12 @@ import java.util.List;
 public class ProductUseCaseService {
 	private final ProductRepository productRepository;
 	private final RateTableRepository rateTableRepository;
+	private final FormulaRepository formulaRepository;
 
-	public ProductUseCaseService(ProductRepository productRepository, RateTableRepository rateTableRepository) {
+	public ProductUseCaseService(ProductRepository productRepository, RateTableRepository rateTableRepository,FormulaRepository formulaRepository) {
 		this.productRepository = productRepository;
 		this.rateTableRepository = rateTableRepository;
+		this.formulaRepository = formulaRepository;
 	}
 
 	public boolean createProduct(final ProductDTO productDTO) {
@@ -46,12 +51,9 @@ public class ProductUseCaseService {
 		String code = rateTableDTO.getRateTableCode();
 		String factors = rateTableDTO.getRateTableFactors();
 		List<RateDTO> rateDTOs = rateTableDTO.getRatesList();
-
-		var rateTable = new RateTable(tenant, code, factors);
-
 		List<Rate> list = rateDTOs.stream().map(e -> new Rate(e.getRateFormat(), BigDecimal.valueOf(e.getRateValue())))
 				.toList();
-		rateTable.setRates(list);
+		var rateTable = new RateTable(tenant, code, factors,list);
 
 		rateTable.validate();
 
@@ -63,7 +65,20 @@ public class ProductUseCaseService {
 		return rateTableRepository.save(rateTableEntity);
 	}
 
-	public void createFormula(final FormulaDTO formulaDTO) {
+	public boolean createFormula(final FormulaDTO formulaDTO) {
+		String insuranceTenant = formulaDTO.getInsuranceTenant();
+		String formulaCode = formulaDTO.getFormulaCode();
+		String formulaDescription = formulaDTO.getFormulaDescription();
+		String formulaExpression = formulaDTO.getFormulaExpression();
+		List<String> formulaParameters = formulaDTO.getFormulaParametersList().stream().toList();
 
+		var formula = new Formula(insuranceTenant, formulaCode, formulaDescription, formulaExpression,formulaParameters);
+
+		formula.validate();
+
+		FormulaEntity formulaEntity = new FormulaEntity(formula.getInsuranceTenant(), formula.getFormulaCode(),
+				formula.getFormulaDescription(), formula.getFormulaExpression(),formula.getFormulaParameters());
+
+		return formulaRepository.save(formulaEntity);
 	}
 }

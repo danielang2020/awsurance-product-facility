@@ -64,7 +64,20 @@ public class ProductGrpc implements ProductService {
 
 	@Override
 	public Uni<CommonResponse> createFormula(final FormulaDTO request) {
-		return null;
+		try {
+			if(productUseCaseService.createFormula(request)){
+				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("ok").build());
+			}else{
+				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("fail").build());
+			}
+		} catch (Exception e) {
+			logger.error("createFormulaException", e);
+			CommonResponseDetail detail = CommonResponseDetail.newBuilder().setResponseDetailKey("msg")
+					.setResponseDetailValue(e.getMessage()).build();
+			return Uni.createFrom()
+					.item(() -> CommonResponse.newBuilder().setResponseCode("error").addAllDetails(List.of(detail))
+							.build());
+		}
 	}
 
 	@Override

@@ -4,6 +4,7 @@ package com.danielang.productfacility.domain.aggregate;
 import com.danielang.productfacility.domain.entity.Formula;
 import com.danielang.productfacility.domain.entity.Indicator;
 import com.danielang.productfacility.domain.entity.RateTable;
+import com.danielang.productfacility.domain.util.DomainUtil;
 
 import java.util.List;
 
@@ -15,106 +16,100 @@ import java.util.List;
  * @create: 2025-03-14 23:05
  **/
 public final class Product {
-	private String tenant;
-	private String code;
-	private String type;
-	private String name;
-	private String abbrevName;
-	private String category;
-	private String currency;
-	private String description;
-	private long startDate;
-	private long endDate;
+	private String insuranceTenant;
+	private String productCode;
+	private String productType;
+	private String productName;
+	private String productAbbrevName;
+	private String productCategory;
+	private String productCurrency;
+	private String productDescription;
+	private long productStartDate;
+	private long productEndDate;
 	private List<Indicator> indicators;
 
 	private List<Formula> formulas;
 
 	private List<RateTable> rateTables;
 
-	private static void isNullOrBlank(String str, String fieldName) {
-		if (str == null || str.isBlank()) {
-			throw new IllegalArgumentException(fieldName + " is required");
-		}
+	public String getInsuranceTenant() {
+		return insuranceTenant;
 	}
 
-	public String getTenant() {
-		return tenant;
+	public void setInsuranceTenant(String insuranceTenant) {
+		this.insuranceTenant = insuranceTenant;
 	}
 
-	public void setTenant(String tenant) {
-		this.tenant = tenant;
+	public String getProductCode() {
+		return productCode;
 	}
 
-	public String getCode() {
-		return code;
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public String getProductType() {
+		return productType;
 	}
 
-	public String getType() {
-		return type;
+	public void setProductType(String productType) {
+		this.productType = productType;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public String getProductName() {
+		return productName;
 	}
 
-	public String getName() {
-		return name;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getProductAbbrevName() {
+		return productAbbrevName;
 	}
 
-	public String getAbbrevName() {
-		return abbrevName;
+	public void setProductAbbrevName(String productAbbrevName) {
+		this.productAbbrevName = productAbbrevName;
 	}
 
-	public void setAbbrevName(String abbrevName) {
-		this.abbrevName = abbrevName;
+	public String getProductCategory() {
+		return productCategory;
 	}
 
-	public String getCategory() {
-		return category;
+	public void setProductCategory(String productCategory) {
+		this.productCategory = productCategory;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public String getProductCurrency() {
+		return productCurrency;
 	}
 
-	public String getCurrency() {
-		return currency;
+	public void setProductCurrency(String productCurrency) {
+		this.productCurrency = productCurrency;
 	}
 
-	public void setCurrency(String currency) {
-		this.currency = currency;
+	public String getProductDescription() {
+		return productDescription;
 	}
 
-	public String getDescription() {
-		return description;
+	public void setProductDescription(String productDescription) {
+		this.productDescription = productDescription;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public long getProductStartDate() {
+		return productStartDate;
 	}
 
-	public long getStartDate() {
-		return startDate;
+	public void setProductStartDate(long productStartDate) {
+		this.productStartDate = productStartDate;
 	}
 
-	public void setStartDate(long startDate) {
-		this.startDate = startDate;
+	public long getProductEndDate() {
+		return productEndDate;
 	}
 
-	public long getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(long endDate) {
-		this.endDate = endDate;
+	public void setProductEndDate(long productEndDate) {
+		this.productEndDate = productEndDate;
 	}
 
 	public List<Indicator> getIndicators() {
@@ -149,29 +144,24 @@ public final class Product {
 	}
 
 	public void validate() {
-		isNullOrBlank(tenant, "product tenant");
+		DomainUtil.isNullOrBlank(insuranceTenant, "insuranceTenant");
+		DomainUtil.isNullOrBlank(productCode, "productCode");
+		DomainUtil.isNullOrBlank(productType, "productType");
+		DomainUtil.isNullOrBlank(productName, "productName");
+		DomainUtil.isNullOrBlank(productAbbrevName, "productAbbrevName");
+		DomainUtil.isNullOrBlank(productCategory, "productCategory");
+		DomainUtil.isNullOrBlank(productCurrency, "productCurrency");
+		DomainUtil.isNullOrBlank(productDescription, "productDescription");
 
-		isNullOrBlank(code, "product code");
-
-		isNullOrBlank(type, "product type");
-
-		isNullOrBlank(name, "product name");
-
-		isNullOrBlank(category, "product category");
-
-		isNullOrBlank(currency, "product currency");
-
-		isNullOrBlank(description, "product description");
-
-		if (startDate == 0) {
-			throw new IllegalArgumentException("Start Date is required");
+		if (productStartDate == 0) {
+			throw new IllegalArgumentException("productStartDate is required");
 		}
 
-		if (endDate == 0) {
-			throw new IllegalArgumentException("End Date is required");
+		if (productEndDate == 0) {
+			throw new IllegalArgumentException("productEndDate is required");
 		}
 
-		if (endDate < startDate) {
+		if (productEndDate < productStartDate) {
 			throw new IllegalArgumentException("End Date must be greater than Start Date");
 		}
 

@@ -14,10 +14,11 @@ public class RateTable {
 	private String factors;
 	private List<Rate> rates;
 
-	public RateTable(String tenant, String code, String factors) {
+	public RateTable(String tenant, String code, String factors, List<Rate> rates) {
 		this.tenant = tenant;
 		this.code = code;
 		this.factors = factors;
+		this.rates = (rates != null && !rates.isEmpty()) ? rates.stream().map(Rate::new).toList() : List.of();
 	}
 
 	public RateTable(RateTable rateTable) {

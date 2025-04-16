@@ -22,3 +22,11 @@ aws dynamodb create-table --table-name InsuranceRateTable \
                           --endpoint-url http://localhost:4566 \
                           --billing-mode PAY_PER_REQUEST \
                           --region us-west-2
+
+
+aws dynamodb create-table --table-name InsuranceFormula \
+                          --key-schema AttributeName=insuranceTenant,KeyType=HASH AttributeName=formulaCode,KeyType=RANGE \
+                          --attribute-definitions AttributeName=insuranceTenant,AttributeType=S AttributeName=formulaCode,AttributeType=S \
+                          --endpoint-url http://localhost:4566 \
+                          --billing-mode PAY_PER_REQUEST \
+                          --region us-west-2

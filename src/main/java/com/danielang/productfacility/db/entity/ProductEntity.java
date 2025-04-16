@@ -7,7 +7,7 @@ import java.util.List;
  * @author: Daniel
  * @create: 2025-03-27 10:25
  **/
-public record ProductEntity(String tenant, String code, String type, String name, String abbrevName, String category,
-							String currency, String description, String insertUser, String updateUser, long startDate,
-							long endDate, long insertTime, long updateTime, List<IndicatorEntity> indicators) {
+public record ProductEntity(String insuranceTenant, String productCode, String productType, String productName, String productAbbrevName, String productCategory,
+							String productCurrency, String productDescription, String insertUser, String updateUser, long productStartDate,
+							long productEndDate, long insertTime, long updateTime, List<IndicatorEntity> indicators) {
 }

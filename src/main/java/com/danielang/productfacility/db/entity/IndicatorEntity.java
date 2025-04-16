@@ -5,6 +5,6 @@ package com.danielang.productfacility.db.entity;
  * @author: Daniel
  * @create: 2025-03-28 13:39
  **/
-public record IndicatorEntity(String key, String value) {
+public record IndicatorEntity(String indicatorKey, String indicatorValue) {
 
 }

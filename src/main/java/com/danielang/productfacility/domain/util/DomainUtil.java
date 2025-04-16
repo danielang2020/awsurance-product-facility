@@ -18,28 +18,35 @@ public class DomainUtil {
 		throw new IllegalStateException("Utility class");
 	}
 
+	public static void isNullOrBlank(String str, String fieldName) {
+		if (str == null || str.isBlank()) {
+			throw new IllegalArgumentException(fieldName + " is required");
+		}
+	}
+
 	public static ProductEntity buildProductEntity(Product product) {
 		List<IndicatorEntity> indicatorEntities = product.getIndicators().stream()
 				.map(e -> new IndicatorEntity(e.getKey(), e.getValue())).toList();
 		long now = System.currentTimeMillis();
 		//todo oauth2
-		return new ProductEntity(product.getTenant(), product.getCode(), product.getType(), product.getName(),
-				product.getAbbrevName(), product.getCategory(), product.getCurrency(), product.getDescription(),
-				"admin", "admin", product.getStartDate(), product.getEndDate(), now, now, indicatorEntities);
+		return new ProductEntity(product.getInsuranceTenant(), product.getProductCode(), product.getProductType(),
+				product.getProductName(), product.getProductAbbrevName(), product.getProductCategory(),
+				product.getProductCurrency(), product.getProductDescription(), "admin", "admin",
+				product.getProductStartDate(), product.getProductEndDate(), now, now, indicatorEntities);
 	}
 
 	public static Product buildProduct(ProductDTO productDTO) {
 		var product = new Product();
-		product.setTenant(productDTO.getInsuranceTenant());
-		product.setCode(productDTO.getProductCode());
-		product.setType(productDTO.getProductType());
-		product.setName(productDTO.getProductName());
-		product.setAbbrevName(productDTO.getProductAbbrevName());
-		product.setCategory(productDTO.getProductCategory());
-		product.setCurrency(productDTO.getProductCurrency());
-		product.setDescription(productDTO.getProductDescription());
-		product.setStartDate(productDTO.getProductStartDate());
-		product.setEndDate(productDTO.getProductEndDate());
+		product.setInsuranceTenant(productDTO.getInsuranceTenant());
+		product.setProductCode(productDTO.getProductCode());
+		product.setProductType(productDTO.getProductType());
+		product.setProductName(productDTO.getProductName());
+		product.setProductAbbrevName(productDTO.getProductAbbrevName());
+		product.setProductCategory(productDTO.getProductCategory());
+		product.setProductCurrency(productDTO.getProductCurrency());
+		product.setProductDescription(productDTO.getProductDescription());
+		product.setProductStartDate(productDTO.getProductStartDate());
+		product.setProductEndDate(productDTO.getProductEndDate());
 
 		List<Indicator> indicators = productDTO.getIndicatorsList().stream()
 				.map(e -> new Indicator(e.getIndicatorKey(), e.getIndicatorValue())).toList();

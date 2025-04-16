@@ -1,9 +1,12 @@
 package com.danielang.productfacility.db.entity;
 
+import java.util.List;
+
 /**
  * @program: awsurance-product-facility
  * @author: Daniel
  * @create: 2025-03-27 10:26
  **/
-public record FormulaEntity() {
+public record FormulaEntity(String insuranceTenant, String formulaCode, String formulaDescription,
+							String formulaExpression, List<String> formulaParameters) {
 }
