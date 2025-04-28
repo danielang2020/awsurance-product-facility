@@ -7,5 +7,5 @@ import java.math.BigDecimal;
  * @author: Daniel
  * @create: 2025-04-02 22:09
  **/
-public record RateEntity(String format, BigDecimal value) {
+public record RateEntity(String rateFormat, BigDecimal rateValue) {
 }

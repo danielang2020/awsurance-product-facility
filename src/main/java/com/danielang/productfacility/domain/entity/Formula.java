@@ -17,15 +17,19 @@ public class Formula {
 	private String formulaDescription;
 	private String formulaExpression;
 	private List<String> formulaParameters;
+	private List<String> rateTableCodes;
 
 	public Formula(String insuranceTenant, String formulaCode, String formulaDescription, String formulaExpression,
-			List<String> formulaParameters) {
+			List<String> formulaParameters,List<String> rateTableCodes) {
 		this.insuranceTenant = insuranceTenant;
 		this.formulaCode = formulaCode;
 		this.formulaDescription = formulaDescription;
 		this.formulaExpression = formulaExpression;
 		this.formulaParameters = (formulaParameters != null && !formulaParameters.isEmpty()) ?
 				formulaParameters.stream().map(String::new).toList() :
+				List.of();
+		this.rateTableCodes = (rateTableCodes != null && !rateTableCodes.isEmpty()) ?
+				rateTableCodes.stream().map(String::new).toList() :
 				List.of();
 	}
 
@@ -35,8 +39,11 @@ public class Formula {
 		this.formulaDescription = formula.formulaDescription;
 		this.formulaExpression = formula.formulaExpression;
 		this.formulaParameters = formula.formulaParameters;
-		this.formulaParameters = (formulaParameters != null && !formulaParameters.isEmpty()) ?
-				formulaParameters.stream().map(String::new).toList() :
+		this.formulaParameters = (formula.formulaParameters != null && !formula.formulaParameters.isEmpty()) ?
+				formula.formulaParameters.stream().map(String::new).toList() :
+				List.of();
+		this.rateTableCodes = (formula.rateTableCodes != null && !formula.rateTableCodes.isEmpty()) ?
+				formula.rateTableCodes.stream().map(String::new).toList() :
 				List.of();
 	}
 
@@ -82,6 +89,16 @@ public class Formula {
 				List.of();
 	}
 
+	public List<String> getRateTableCodes() {
+		return rateTableCodes;
+	}
+
+	public void setRateTableCodes(List<String> rateTableCodes) {
+		this.rateTableCodes = (rateTableCodes != null && !rateTableCodes.isEmpty()) ?
+				rateTableCodes.stream().map(String::new).toList() :
+				List.of();
+	}
+
 	public void validate() {
 		DomainUtil.isNullOrBlank(insuranceTenant, "insuranceTenant");
 		DomainUtil.isNullOrBlank(formulaCode, "formulaCode");
@@ -99,5 +116,15 @@ public class Formula {
 			});
 		}
 
+		if (rateTableCodes == null || rateTableCodes.isEmpty()) {
+			throw new IllegalArgumentException("rateTableCodes is required");
+		}else{
+			rateTableCodes.forEach(e->{
+				boolean contains = formulaExpression.contains(e);
+				if (!contains) {
+					throw new IllegalArgumentException("formulaExpression must contain rateTableCodes");
+				}
+			});
+		}
 	}
 }

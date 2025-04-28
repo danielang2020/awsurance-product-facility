@@ -9,4 +9,5 @@ import com.danielang.productfacility.db.entity.RateTableEntity;
  **/
 public sealed interface RateTableRepository permits RateTableDynamodbRepository {
 	boolean save(RateTableEntity rateTableEntity);
+	boolean queryByTenantAndCode(String tenant, String code);
 }

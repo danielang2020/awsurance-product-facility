@@ -1,5 +1,7 @@
 package com.danielang.productfacility.domain.entity;
 
+import com.danielang.productfacility.domain.util.DomainUtil;
+
 import java.util.List;
 
 /**
@@ -9,49 +11,60 @@ import java.util.List;
  **/
 public class RateTable {
 	public static final String FACTORS_DELIMITER = ",";
-	private String tenant;
-	private String code;
-	private String factors;
+	private String insuranceTenant;
+	private String rateTableCode;
+	private String rateTableDescription;
+	private String rateTableFactors;
 	private List<Rate> rates;
 
-	public RateTable(String tenant, String code, String factors, List<Rate> rates) {
-		this.tenant = tenant;
-		this.code = code;
-		this.factors = factors;
+	public RateTable(String insuranceTenant, String rateTableCode,String rateTableDescription, String rateTableFactors, List<Rate> rates) {
+		this.insuranceTenant = insuranceTenant;
+		this.rateTableCode = rateTableCode;
+		this.rateTableDescription = rateTableDescription;
+		this.rateTableFactors = rateTableFactors;
 		this.rates = (rates != null && !rates.isEmpty()) ? rates.stream().map(Rate::new).toList() : List.of();
 	}
 
 	public RateTable(RateTable rateTable) {
-		this.tenant = rateTable.getTenant();
-		this.code = rateTable.getCode();
-		this.factors = rateTable.getFactors();
+		this.insuranceTenant = rateTable.getInsuranceTenant();
+		this.rateTableCode = rateTable.getRateTableCode();
+		this.rateTableDescription = rateTable.getRateTableDescription();
+		this.rateTableFactors = rateTable.getRateTableFactors();
 		this.rates = (rateTable.rates != null && !rateTable.rates.isEmpty()) ?
 				rateTable.rates.stream().map(Rate::new).toList() :
 				List.of();
 	}
 
-	public String getFactors() {
-		return factors;
+	public String getInsuranceTenant() {
+		return insuranceTenant;
 	}
 
-	public void setFactors(String factors) {
-		this.factors = factors;
+	public void setInsuranceTenant(String insuranceTenant) {
+		this.insuranceTenant = insuranceTenant;
 	}
 
-	public String getTenant() {
-		return tenant;
+	public String getRateTableCode() {
+		return rateTableCode;
 	}
 
-	public void setTenant(String tenant) {
-		this.tenant = tenant;
+	public void setRateTableCode(String rateTableCode) {
+		this.rateTableCode = rateTableCode;
 	}
 
-	public String getCode() {
-		return code;
+	public String getRateTableDescription() {
+		return rateTableDescription;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setRateTableDescription(String rateTableDescription) {
+		this.rateTableDescription = rateTableDescription;
+	}
+
+	public String getRateTableFactors() {
+		return rateTableFactors;
+	}
+
+	public void setRateTableFactors(String rateTableFactors) {
+		this.rateTableFactors = rateTableFactors;
 	}
 
 	public List<Rate> getRates() {
@@ -63,17 +76,9 @@ public class RateTable {
 	}
 
 	public void validate() {
-		if (tenant == null || tenant.isBlank()) {
-			throw new IllegalArgumentException("Rate Table Tenant is required");
-		}
-
-		if (code == null || code.isBlank()) {
-			throw new IllegalArgumentException("Rate Table Code is required");
-		}
-
-		if (factors == null || factors.isBlank()) {
-			throw new IllegalArgumentException("Rate Table Factors is required");
-		}
+		DomainUtil.isNullOrBlank(insuranceTenant, "insuranceTenant");
+		DomainUtil.isNullOrBlank(rateTableCode, "rateTableCode");
+		DomainUtil.isNullOrBlank(rateTableFactors, "rateTableFactors");
 
 		if (rates == null || rates.isEmpty()) {
 			throw new IllegalArgumentException("Rate Table Rates is required");
@@ -81,7 +86,7 @@ public class RateTable {
 			rates.forEach(Rate::validate);
 		}
 
-		int length = factors.split(FACTORS_DELIMITER).length;
+		int length = rateTableFactors.split(FACTORS_DELIMITER).length;
 		boolean match = rates.stream().anyMatch(e -> e.getFormat().split(FACTORS_DELIMITER).length != length);
 		if (match) {
 			throw new IllegalArgumentException("Rate Table Rate Format is not match with Factors");

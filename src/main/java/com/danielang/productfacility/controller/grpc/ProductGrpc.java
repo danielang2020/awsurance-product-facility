@@ -65,9 +65,16 @@ public class ProductGrpc implements ProductService {
 	@Override
 	public Uni<CommonResponse> createFormula(final FormulaDTO request) {
 		try {
-			if(productUseCaseService.createFormula(request)){
+			boolean rateTableCheck = request.getRateTableCodesList().stream()
+					.anyMatch(e -> !productUseCaseService.queryRateTableByCode(request.getInsuranceTenant(), e));
+
+			if (rateTableCheck) {
+				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("rate table not exist").build());
+			}
+
+			if (productUseCaseService.createFormula(request)) {
 				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("ok").build());
-			}else{
+			} else {
 				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("fail").build());
 			}
 		} catch (Exception e) {
@@ -88,5 +95,18 @@ public class ProductGrpc implements ProductService {
 	@Override
 	public Uni<CommonResponse> updateProductByAddingRateTable(AddingRateTableDTO request) {
 		return null;
+	}
+
+	@Override
+	public Uni<CommonResponse> calculateFormula(CalculateFormulaDTO request) {
+	    return productUseCaseService.calculateFormula()
+	            .onItem().transform(calculationResponse -> {
+	                logger.info("calculateFormulaResponse: {}", calculationResponse.getLatex());
+	                return CommonResponse.newBuilder().setResponseCode("ok").build();
+	            })
+	            .onFailure().recoverWithItem(e -> {
+	                logger.error("calculateFormulaException", e);
+	                return CommonResponse.newBuilder().setResponseCode("error").build();
+	            });
 	}
 }

@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.dynamodb.model.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: awsurance-product-facility
@@ -19,7 +20,8 @@ public final class RateTableDynamodbRepository implements RateTableRepository {
 	public static final String RATETABLE_TABLE_NAME = "InsuranceRateTable";
 	public static final String RATETABLE_TABLE_HASH_KEY = "insuranceTenant";
 	public static final String RATETABLE_TABLE_RANGE_KEY = "rateTableCode";
-	public static final String RATETABLE_TABLE_FACTOR_VALUE = "factorValue";
+	public static final String RATETABLE_TABLE_DESCRIPTION = "rateTableDescription";
+	public static final String RATETABLE_TABLE_FACTOR_VALUE = "rateTableFactors";
 	public static final String RATETABLE_TABLE_RATE_VALUE = "rateValue";
 	public static final String RATETABLE_RANGE_KEY_SUFFIX = "_FACTORS";
 	public static final String RATETABLE_STATUS = "rateTableStatus";
@@ -34,10 +36,11 @@ public final class RateTableDynamodbRepository implements RateTableRepository {
 	@Override
 	public boolean save(RateTableEntity rateTableEntity) {
 		var item = new HashMap<String, AttributeValue>();
-		item.put(RATETABLE_TABLE_HASH_KEY, AttributeValue.builder().s(rateTableEntity.tenant()).build());
+		item.put(RATETABLE_TABLE_HASH_KEY, AttributeValue.builder().s(rateTableEntity.insuranceTenant()).build());
 		item.put(RATETABLE_TABLE_RANGE_KEY,
-				AttributeValue.builder().s(rateTableEntity.code() + RATETABLE_RANGE_KEY_SUFFIX).build());
-		item.put(RATETABLE_TABLE_FACTOR_VALUE, AttributeValue.builder().s(rateTableEntity.factors()).build());
+				AttributeValue.builder().s(rateTableEntity.rateTableCode() + RATETABLE_RANGE_KEY_SUFFIX).build());
+		item.put(RATETABLE_TABLE_FACTOR_VALUE, AttributeValue.builder().s(rateTableEntity.rateTableFactors()).build());
+		item.put(RATETABLE_TABLE_DESCRIPTION,AttributeValue.builder().s(rateTableEntity.rateTableDescription()).build());
 		item.put(RATETABLE_STATUS, AttributeValue.builder().s(RATETABLE_STATUS_INIT).build());
 		PutItemRequest putItemRequest = PutItemRequest.builder().tableName(RATETABLE_TABLE_NAME).item(item)
 				.conditionExpression("attribute_not_exists(" + RATETABLE_TABLE_HASH_KEY + ") and attribute_not_exists("
@@ -48,11 +51,11 @@ public final class RateTableDynamodbRepository implements RateTableRepository {
 			List<RateEntity> rateEntities = rateTableEntity.rates();
 			for (RateEntity rateEntity : rateEntities) {
 				var rateItem = new HashMap<String, AttributeValue>();
-				rateItem.put(RATETABLE_TABLE_HASH_KEY, AttributeValue.builder().s(rateTableEntity.tenant()).build());
+				rateItem.put(RATETABLE_TABLE_HASH_KEY, AttributeValue.builder().s(rateTableEntity.insuranceTenant()).build());
 				rateItem.put(RATETABLE_TABLE_RANGE_KEY,
-						AttributeValue.builder().s(rateTableEntity.code() + "_" + rateEntity.format()).build());
+						AttributeValue.builder().s(rateTableEntity.rateTableCode() + "@" + rateEntity.rateFormat()).build());
 				rateItem.put(RATETABLE_TABLE_RATE_VALUE,
-						AttributeValue.builder().s(rateEntity.value().toPlainString()).build());
+						AttributeValue.builder().s(rateEntity.rateValue().toPlainString()).build());
 				PutItemRequest ratePutItemRequest = PutItemRequest.builder().tableName(RATETABLE_TABLE_NAME)
 						.item(rateItem).conditionExpression(
 								"attribute_not_exists(" + RATETABLE_TABLE_HASH_KEY + ") and attribute_not_exists("
@@ -65,9 +68,9 @@ public final class RateTableDynamodbRepository implements RateTableRepository {
 
 			if (!rateEntities.isEmpty()) {
 				var keyItem = new HashMap<String, AttributeValue>();
-				keyItem.put(RATETABLE_TABLE_HASH_KEY, AttributeValue.builder().s(rateTableEntity.tenant()).build());
+				keyItem.put(RATETABLE_TABLE_HASH_KEY, AttributeValue.builder().s(rateTableEntity.insuranceTenant()).build());
 				keyItem.put(RATETABLE_TABLE_RANGE_KEY,
-						AttributeValue.builder().s(rateTableEntity.code() + RATETABLE_RANGE_KEY_SUFFIX).build());
+						AttributeValue.builder().s(rateTableEntity.rateTableCode() + RATETABLE_RANGE_KEY_SUFFIX).build());
 
 				var updateItem = new HashMap<String, AttributeValueUpdate>();
 				updateItem.put(RATETABLE_STATUS, AttributeValueUpdate.builder().value(d -> d.s(RATETABLE_STATUS_DONE))
@@ -81,5 +84,21 @@ public final class RateTableDynamodbRepository implements RateTableRepository {
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean queryByTenantAndCode(String insuranceTenant, String rateTableCode) {
+		var item = new HashMap<String, AttributeValue>();
+		item.put(RATETABLE_TABLE_HASH_KEY, AttributeValue.builder().s(insuranceTenant).build());
+		item.put(RATETABLE_TABLE_RANGE_KEY,
+				AttributeValue.builder().s(rateTableCode + RATETABLE_RANGE_KEY_SUFFIX).build());
+		GetItemRequest request = GetItemRequest.builder()
+				.key(item)
+				.tableName(RATETABLE_TABLE_NAME)
+				.build();
+
+		Map<String, AttributeValue> returnedItem = dynamoDB.getItem(request).item();
+
+		return !returnedItem.isEmpty();
 	}
 }

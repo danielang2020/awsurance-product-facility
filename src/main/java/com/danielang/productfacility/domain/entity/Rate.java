@@ -1,5 +1,7 @@
 package com.danielang.productfacility.domain.entity;
 
+import com.danielang.productfacility.domain.util.DomainUtil;
+
 import java.math.BigDecimal;
 
 /**
@@ -8,34 +10,29 @@ import java.math.BigDecimal;
  * @create: 2025-03-26 18:34
  **/
 public class Rate {
-	private final String format;
-	private final BigDecimal value;
+	private final String rateFormat;
+	private final BigDecimal rateValue;
 
 	public Rate(Rate rate) {
-		this.format = rate.getFormat();
-		this.value = rate.getValue();
+		this.rateFormat = rate.getFormat();
+		this.rateValue = rate.getValue();
 	}
 
-	public Rate(String format,BigDecimal value) {
-		this.format = format;
-		this.value = value;
+	public Rate(String rateFormat,BigDecimal rateValue) {
+		this.rateFormat = rateFormat;
+		this.rateValue = rateValue;
 	}
 
 	public String getFormat() {
-		return format;
+		return rateFormat;
 	}
 
 	public BigDecimal getValue() {
-		return value;
+		return rateValue;
 	}
 
 	public void validate() {
-		if(format == null || format.isEmpty()) {
-			throw new IllegalArgumentException("Rate format cannot be null or empty");
-		}
-
-		if(value == null) {
-			throw new IllegalArgumentException("Rate value cannot be null");
-		}
+		DomainUtil.isNullOrBlank(rateFormat, "rateFormat");
+		DomainUtil.isNullOrBlank(rateValue, "rateValue");
 	}
 }

@@ -23,6 +23,12 @@ aws dynamodb create-table --table-name InsuranceRateTable \
                           --billing-mode PAY_PER_REQUEST \
                           --region us-west-2
 
+aws dynamodb query \
+    --table-name InsuranceRateTable \
+    --key-condition-expression "insuranceTenant = :insuranceTenant" \
+    --expression-attribute-values '{":insuranceTenant":{"S":"HSBC"}}' \
+    --endpoint-url http://localhost:4566
+
 
 aws dynamodb create-table --table-name InsuranceFormula \
                           --key-schema AttributeName=insuranceTenant,KeyType=HASH AttributeName=formulaCode,KeyType=RANGE \

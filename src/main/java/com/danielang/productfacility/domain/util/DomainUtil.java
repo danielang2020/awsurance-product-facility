@@ -6,6 +6,7 @@ import com.danielang.productfacility.db.entity.ProductEntity;
 import com.danielang.productfacility.domain.aggregate.Product;
 import com.danielang.productfacility.domain.entity.Indicator;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -20,6 +21,12 @@ public class DomainUtil {
 
 	public static void isNullOrBlank(String str, String fieldName) {
 		if (str == null || str.isBlank()) {
+			throw new IllegalArgumentException(fieldName + " is required");
+		}
+	}
+
+	public static void isNullOrBlank(BigDecimal bigDecimal, String fieldName) {
+		if (bigDecimal == null || bigDecimal.compareTo(BigDecimal.ZERO) == 0) {
 			throw new IllegalArgumentException(fieldName + " is required");
 		}
 	}

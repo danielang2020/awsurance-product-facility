@@ -46,11 +46,19 @@ class ProductGrpcTest {
 
 	@Test
 	void testCreateFormula() {
-		FormulaDTO build = FormulaDTO.newBuilder().setInsuranceTenant("HSBC" + System.currentTimeMillis())
-				.setFormulaCode("test").setFormulaDescription("test").setFormulaExpression("a+b+c")
-				.addAllFormulaParameters(List.of("a", "b", "c")).build();
+		RateTableDTO rateTableDTO = RateTableDTO.newBuilder().setInsuranceTenant("HSBC" + System.currentTimeMillis())
+				.setRateTableCode("test").setRateTableFactors("a,b,c")
+				.addRates(RateDTO.newBuilder().setRateFormat("1,2,3").setRateValue(1.0).build()).build();
 
-		CommonResponse indefinitely = client.createFormula(build).await().indefinitely();
+
+		CommonResponse indefinitely = client.createRateTable(rateTableDTO).await().indefinitely();
+		assertThat(indefinitely.getResponseCode(), equalTo("ok"));
+
+		FormulaDTO build = FormulaDTO.newBuilder().setInsuranceTenant("HSBC" + System.currentTimeMillis())
+				.setFormulaCode("test").setFormulaDescription("test").setFormulaExpression("a+b+c+test")
+				.addAllFormulaParameters(List.of("a", "b", "c")).addAllRateTableCodes(List.of("test")).build();
+
+		indefinitely = client.createFormula(build).await().indefinitely();
 		assertThat(indefinitely.getResponseCode(), equalTo("ok"));
 	}
 }

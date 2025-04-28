@@ -1,5 +1,7 @@
 package com.danielang.productfacility.domain.entity;
 
+import com.danielang.productfacility.domain.util.DomainUtil;
+
 /**
  * @program: awsurance-product-facility
  * @author: Daniel
@@ -36,12 +38,7 @@ public class Indicator{
 	}
 
 	public void validate() {
-		if (key == null || key.isEmpty()) {
-			throw new IllegalArgumentException("Indicator key is required");
-		}
-
-		if (value == null || value.isEmpty()) {
-			throw new IllegalArgumentException("Indicator value is required");
-		}
+		DomainUtil.isNullOrBlank(key, "key");
+		DomainUtil.isNullOrBlank(value, "value");
 	}
 }
