@@ -46,7 +46,8 @@ class ProductGrpcTest {
 
 	@Test
 	void testCreateFormula() {
-		RateTableDTO rateTableDTO = RateTableDTO.newBuilder().setInsuranceTenant("HSBC" + System.currentTimeMillis())
+		var prefix = System.currentTimeMillis();
+		RateTableDTO rateTableDTO = RateTableDTO.newBuilder().setInsuranceTenant("HSBC" + prefix)
 				.setRateTableCode("test").setRateTableFactors("a,b,c")
 				.addRates(RateDTO.newBuilder().setRateFormat("1,2,3").setRateValue(1.0).build()).build();
 
@@ -54,7 +55,7 @@ class ProductGrpcTest {
 		CommonResponse indefinitely = client.createRateTable(rateTableDTO).await().indefinitely();
 		assertThat(indefinitely.getResponseCode(), equalTo("ok"));
 
-		FormulaDTO build = FormulaDTO.newBuilder().setInsuranceTenant("HSBC" + System.currentTimeMillis())
+		FormulaDTO build = FormulaDTO.newBuilder().setInsuranceTenant("HSBC" + prefix)
 				.setFormulaCode("test").setFormulaDescription("test").setFormulaExpression("a+b+c+test")
 				.addAllFormulaParameters(List.of("a", "b", "c")).addAllRateTableCodes(List.of("test")).build();
 

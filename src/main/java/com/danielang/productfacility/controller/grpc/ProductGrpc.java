@@ -69,7 +69,8 @@ public class ProductGrpc implements ProductService {
 					.anyMatch(e -> !productUseCaseService.queryRateTableByCode(request.getInsuranceTenant(), e));
 
 			if (rateTableCheck) {
-				return Uni.createFrom().item(() -> CommonResponse.newBuilder().setResponseCode("rate table not exist").build());
+				return Uni.createFrom()
+						.item(() -> CommonResponse.newBuilder().setResponseCode("rate table not exist").build());
 			}
 
 			if (productUseCaseService.createFormula(request)) {
@@ -99,14 +100,12 @@ public class ProductGrpc implements ProductService {
 
 	@Override
 	public Uni<CommonResponse> calculateFormula(CalculateFormulaDTO request) {
-	    return productUseCaseService.calculateFormula()
-	            .onItem().transform(calculationResponse -> {
-	                logger.info("calculateFormulaResponse: {}", calculationResponse.getLatex());
-	                return CommonResponse.newBuilder().setResponseCode("ok").build();
-	            })
-	            .onFailure().recoverWithItem(e -> {
-	                logger.error("calculateFormulaException", e);
-	                return CommonResponse.newBuilder().setResponseCode("error").build();
-	            });
+		return productUseCaseService.calculateFormula().onItem().transform(calculationResponse -> {
+			logger.info("calculateFormulaResponse: {}", calculationResponse.getLatex());
+			return CommonResponse.newBuilder().setResponseCode("ok").build();
+		}).onFailure().recoverWithItem(e -> {
+			logger.error("calculateFormulaException", e);
+			return CommonResponse.newBuilder().setResponseCode("error").build();
+		});
 	}
 }
