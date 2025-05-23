@@ -1,0 +1,40 @@
+package com.danielang.elastic.productfacility.controller.rest.dto;
+
+import com.danielang.elastic.productfacility.domain.Product;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import java.util.List;
+
+/**
+ * @program: awsurance-product-facility
+ * @author: Daniel
+ * @create: 2025-05-11 21:02
+ * @limitation: since an item in dynamodb is limited to 400KB, so the product information should be limited to 400KB = 409,600 bytes.
+ **/
+@Schema(name = "Product", description = "product information")
+public record ProductDTO(
+		@Schema(name = "insuranceTenant", description = "tenant id, for multi-tenant", required = true, examples = "uuubee", maxLength = 20) @NotBlank(message = "insuranceTenant not blank") @Max(message = "insuranceTenant max 20", value = 20) String insuranceTenant,
+		@Schema(name = "productCategory", description = "product category", required = true, enumeration = {
+				"WHOLE_LIFE", "TERM",
+				"DREAD_DISEASE"}) @NotBlank(message = "productCategory not blank") String productCategory,
+		@Schema(name = "productCode", description = "product code, tenant and code = unique key", required = true, examples = "LTAA", maxLength = 20) String productCode,
+		@Schema(name = "productType", description = "product type, BASIC or RIDER", required = true, enumeration = {
+				"BASIC", "RIDER"}) String productType,
+		@Schema(name = "specialCollectionFields", description = "which special personal fields need to be collected when sells this product", required = true, examples = "[\"COUNTRY\", \"IDENTIFICATION_TYPE\", \"IDENTIFICATION_NO\"]", enumeration = "[\"COUNTRY\", \"IDENTIFICATION_TYPE\", \"IDENTIFICATION_NO\"]") List<String> specialCollectionFields,
+		@Schema(name = "productSections", description = "which sections need to be stored when add/update a product", required = true, examples = "[\"PRODUCT_INFORMATION\", \"PRODUCT_SALE\", \"PRODUCT_PREMIUM_SA_RATE\"]", enumeration = "[\"PRODUCT_INFORMATION\", \"PRODUCT_SALE\", \"PRODUCT_PREMIUM_SA_RATE\"]") List<String> productSections,
+		@JsonProperty("productInformation") ProductInformationDTO productInformationDTO,
+		@JsonProperty("productSale") ProductSaleDTO productSaleDTO,
+		@JsonProperty("productPremiumSARate") ProductPremiumSARateDTO productPremiumSARateDTO)
+		implements DTO, DTOConverter<Product> {
+
+
+	@Override
+	public Product convert() {
+		return new Product(specialCollectionFields, productSections, insuranceTenant, productCategory, productCode,
+				productType, productInformationDTO.convert(), productSaleDTO.convert(),
+				productPremiumSARateDTO.convert());
+	}
+}

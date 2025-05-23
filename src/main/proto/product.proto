@@ -1,124 +1,124 @@
-syntax = "proto3";
-
-option java_multiple_files = true;
-option java_package = "com.danielang.productfacility.controller.grpc";
-
-
-package com.danielang.productfacility.controller.grpc;
-
-message RateDTO{
-  string rateFormat = 1; // rate factors value, separated by comma
-  double rateValue = 2; // related rate value
-}
-
-message RateTableDTO{
-  // tenant + code = unique key
-  string insuranceTenant = 1; // tenant id, for multi-tenancy
-  string rateTableCode = 2; // rate table name
-  string rateTableDescription = 3; // rate table description, base64 encoded
-  string rateTableFactors = 4; // rate factors, separated by comma
-  repeated RateDTO rates = 5; // rates
-}
-
-message FormulaDTO{
-  string insuranceTenant = 1; // tenant id, for multi-tenancy
-  string formulaCode = 2; // formula code
-  string formulaDescription = 3; // formula description, base64 encoded
-  string formulaExpression = 4; // formula expression
-  repeated string formulaParameters = 5; // formula parameters which are individual info
-  repeated string rateTableCodes = 6; // rate table code which will retrieve rate from specific rate table
-}
-
-message ProductFormulaDTO{
-  string insuranceTenant = 1; // tenant id, for multi-tenancy
-  string formulaCode = 2; // formula code
-  repeated string rateTableCodes = 6; // rate table codes
-}
-
-//  formula / NB rule / UW rule / CS rule / Claim rule
-message ProductFormulaSection{
-  string formulaType = 1;
-  string formulaCode = 2;
-}
-
-message ProductDTO{
-  // tenant + code = unique key
-  string insuranceTenant = 1; // tenant id, for multi-tenancy
-  string productCode = 2; // product code
-  string productType = 3; // product type, basic or rider
-  string productName = 4; // product name
-  string productAbbrevName = 5; // product abbreviation name
-  string productCategory = 6; // product category, whole life / term life/ mortgage / ilp / health / endowment / dread disease / accident
-  string productCurrency = 7; // product currency
-  string productDescription = 8; // product description, base64 encoded
-  int64 productStartDate = 9; // product start date
-  int64 productEndDate = 10; // product end date
-
-  repeated IndicatorDTO indicators = 11; // product indicators
-
-  ProductFormulaSection formulaSection = 12;
-}
-
-
-
-message IndicatorDTO{
-  string indicatorKey = 1; // indicator name, must has indicator prefix
-  string indicatorType = 2;// radio / dictionary(refer to dictionary) / date / number / text
-  string indicatorValue = 3; // indicator value
-}
-
-
-
-
-message CommonResponse{
-  string responseCode = 1; // response code
-  repeated CommonResponseDetail details = 2; // response details
-}
-
-message CommonResponseDetail{
-  string responseDetailKey = 1; // response code
-  string responseDetailValue = 2; // response message
-}
-
-
-
-message AddingFormulaDTO{
-  string insuranceTenant = 1; // tenant id
-  string productCode = 2; // product code
-  string formulaCode = 3; // formula code
-}
-
-message AddingRateTableDTO{
-  string insuranceTenant = 1; // tenant id
-  string productCode = 2; // product code
-  string rateTableCode = 3; // rate table code
-}
-
-
-service ProductService {
-  rpc CreateProduct (ProductDTO) returns (CommonResponse) {}
-  rpc CreateRateTable(RateTableDTO) returns (CommonResponse) {}
-  rpc createFormula(FormulaDTO) returns (CommonResponse) {}
-  rpc UpdateProductByAddingFormula (AddingFormulaDTO) returns (CommonResponse) {}
-  rpc UpdateProductByAddingRateTable (AddingRateTableDTO) returns (CommonResponse) {}
-  rpc CalculateFormula (CalculateFormulaDTO) returns (CommonResponse) {}
-}
-
-message CalculateFormulaDTO{
-  string insuranceTenant = 1; // tenant id
-  string productCode = 2; // product code
-  string formulaCode = 3; // formula code
-  repeated CalculateParameter parameters = 4; // parameters
-}
-
-message CalculateParameter{
-  string parameterKey = 1; // parameter key
-  string parameterValue = 2; // parameter value
-}
-
-
-message Dictionary{
-  string insuranceTenant = 1; // tenant id
-  string dictionaryCode = 2;
-  repeated string dictionaryValues = 3;
-}
+//syntax = "proto3";
+//
+//option java_multiple_files = true;
+//option java_package = "com.danielang.elastic.productfacility.controller.grpc";
+//
+//
+//package com.danielang.elastic.productfacility.controller.grpc;
+//
+//message RateDTO{
+//  string rateFormat = 1; // rate factors value, separated by comma
+//  double rateValue = 2; // related rate value
+//}
+//
+//message RateTableDTO{
+//  // tenant + code = unique key
+//  string insuranceTenant = 1; // tenant id, for multi-tenancy
+//  string rateTableCode = 2; // rate table name
+//  string rateTableDescription = 3; // rate table description, base64 encoded
+//  string rateTableFactors = 4; // rate factors, separated by comma
+//  repeated RateDTO rates = 5; // rates
+//}
+//
+//message FormulaDTO{
+//  string insuranceTenant = 1; // tenant id, for multi-tenancy
+//  string formulaCode = 2; // formula code
+//  string formulaDescription = 3; // formula description, base64 encoded
+//  string formulaExpression = 4; // formula expression
+//  repeated string formulaParameters = 5; // formula parameters which are individual info
+//  repeated string rateTableCodes = 6; // rate table code which will retrieve rate from specific rate table
+//}
+//
+//message ProductFormulaDTO{
+//  string insuranceTenant = 1; // tenant id, for multi-tenancy
+//  string formulaCode = 2; // formula code
+//  repeated string rateTableCodes = 6; // rate table codes
+//}
+//
+////  formula / NB rule / UW rule / CS rule / Claim rule
+//message ProductFormulaSection{
+//  string formulaType = 1;
+//  string formulaCode = 2;
+//}
+//
+//message ProductDTO{
+//  // tenant + code = unique key
+//  string insuranceTenant = 1; // tenant id, for multi-tenancy
+//  string productCode = 2; // product code
+//  string productType = 3; // product type, basic or rider
+//  string productName = 4; // product name
+//  string productAbbrevName = 5; // product abbreviation name
+//  string productCategory = 6; // product category, whole life / term life/ mortgage / ilp / health / endowment / dread disease / accident
+//  string productCurrency = 7; // product currency
+//  string productDescription = 8; // product description, base64 encoded
+//  int64 productStartDate = 9; // product start date
+//  int64 productEndDate = 10; // product end date
+//
+//  repeated IndicatorDTO indicators = 11; // product indicators
+//
+//  repeated ProductFormulaSection formulaSection = 12;
+//}
+//
+//
+//
+//message IndicatorDTO{
+//  string indicatorKey = 1; // indicator name, must has indicator prefix
+//  string indicatorType = 2;// radio / dictionary(refer to dictionary) / date / number / text
+//  string indicatorValue = 3; // indicator value
+//}
+//
+//
+//
+//
+//message CommonResponse{
+//  string responseCode = 1; // response code
+//  repeated CommonResponseDetail details = 2; // response details
+//}
+//
+//message CommonResponseDetail{
+//  string responseDetailKey = 1; // response code
+//  string responseDetailValue = 2; // response message
+//}
+//
+//
+//
+//message AddingFormulaDTO{
+//  string insuranceTenant = 1; // tenant id
+//  string productCode = 2; // product code
+//  string formulaCode = 3; // formula code
+//}
+//
+//message AddingRateTableDTO{
+//  string insuranceTenant = 1; // tenant id
+//  string productCode = 2; // product code
+//  string rateTableCode = 3; // rate table code
+//}
+//
+//
+//service ProductService {
+//  rpc CreateProduct (ProductDTO) returns (CommonResponse) {}
+//  rpc CreateRateTable(RateTableDTO) returns (CommonResponse) {}
+//  rpc createFormula(FormulaDTO) returns (CommonResponse) {}
+//  rpc UpdateProductByAddingFormula (AddingFormulaDTO) returns (CommonResponse) {}
+//  rpc UpdateProductByAddingRateTable (AddingRateTableDTO) returns (CommonResponse) {}
+//  rpc CalculateFormula (CalculateFormulaDTO) returns (CommonResponse) {}
+//}
+//
+//message CalculateFormulaDTO{
+//  string insuranceTenant = 1; // tenant id
+//  string productCode = 2; // product code
+//  string formulaCode = 3; // formula code
+//  repeated CalculateParameter parameters = 4; // parameters
+//}
+//
+//message CalculateParameter{
+//  string parameterKey = 1; // parameter key
+//  string parameterValue = 2; // parameter value
+//}
+//
+//
+//message Dictionary{
+//  string insuranceTenant = 1; // tenant id
+//  string dictionaryCode = 2;
+//  repeated string dictionaryValues = 3;
+//}
