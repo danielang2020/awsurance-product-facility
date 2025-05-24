@@ -14,11 +14,12 @@ public sealed interface ProductRepository permits ProductDynamodbRepository {
 	void save(ProductEntity productEntity, ProductInformationEntity productInformationEntity,
 			ProductPremiumSARateEntity productPremiumSARateEntity, ProductSaleEntity productSaleEntity);
 
-	boolean update(ProductEntity productEntity);
+	ProductEntity findByInsuranceTenantAndProductCode(String insuranceTenant, String productCode);
 
-	boolean update(ProductInformationEntity productInformationEntity);
+	ProductInformationEntity findInformationByInsuranceTenantAndProductCode(String insuranceTenant, String productCode);
 
-	boolean update(ProductPremiumSARateEntity productPremiumSARateEntity);
-	boolean update(ProductSaleEntity productSaleEntity);
+	ProductPremiumSARateEntity findPremiumSARateByInsuranceTenantAndProductCode(String insuranceTenant,
+			String productCode);
 
+	ProductSaleEntity findSaleByInsuranceTenantAndProductCode(String insuranceTenant, String productCode);
 }

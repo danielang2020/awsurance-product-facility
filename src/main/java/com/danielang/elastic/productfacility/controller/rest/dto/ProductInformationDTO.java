@@ -1,6 +1,5 @@
 package com.danielang.elastic.productfacility.controller.rest.dto;
 
-import com.danielang.elastic.productfacility.domain.ProductInformation;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 /**
@@ -13,9 +12,6 @@ public record ProductInformationDTO(
 		@Schema(name = "productName", description = "product full name", required = true, examples = "Living Term Assurance", maxLength = 100) String productName,
 		@Schema(name = "productAbbrevName", description = "product short name", examples = "Living Term Assurance", maxLength = 50) String productAbbrevName,
 		@Schema(name = "productDescription", description = "product description", required = true, examples = "A non-participation plan with a dread disease accelerator on the sum assured.", maxLength = 500) String productDescription)
-		implements DTO, DTOConverter<ProductInformation> {
-	@Override
-	public ProductInformation convert() {
-		return new ProductInformation(productName, productAbbrevName, productDescription);
-	}
+		implements DTO {
+
 }

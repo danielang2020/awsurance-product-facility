@@ -26,15 +26,19 @@ public final class ProductSaleEntity extends DynamoDBEntity {
 	public ProductSaleEntity() {
 	}
 
-	public ProductSaleEntity(String insuranceTenant, String productCategory, String productCode, String productType,
-			String productCurrency, long productStartDate, long productEndDate,
-			Map<String, String> productSaleIndicators) {
-		this.pk = buildPartitionKey(insuranceTenant, productCategory, productCode, productType);
+	public ProductSaleEntity(String insuranceTenant, String productCode, String productCurrency, long productStartDate,
+			long productEndDate, Map<String, String> productSaleIndicators) {
+		this.pk = buildPartitionKey(insuranceTenant, productCode);
 		this.sk = buildSortKey(SK_SUFFIX);
 		this.productCurrency = productCurrency;
 		this.productStartDate = productStartDate;
 		this.productEndDate = productEndDate;
 		this.productSaleIndicators = Map.copyOf(productSaleIndicators);
+	}
+
+	public ProductSaleEntity(String insuranceTenant, String productCode) {
+		this.pk = buildPartitionKey(insuranceTenant, productCode);
+		this.sk = buildSortKey(SK_SUFFIX);
 	}
 
 	@DynamoDbPartitionKey

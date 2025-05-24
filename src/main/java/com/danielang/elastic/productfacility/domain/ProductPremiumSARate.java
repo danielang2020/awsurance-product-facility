@@ -1,8 +1,5 @@
 package com.danielang.elastic.productfacility.domain;
 
-import com.danielang.elastic.productfacility.db.entity.ProductPremiumSARateEntity;
-import com.danielang.elastic.productfacility.db.entity.ProductPrimaryKey;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +8,7 @@ import java.util.Map;
  * @author: Daniel
  * @create: 2025-05-19 16:47
  **/
-public final class ProductPremiumSARate implements Domain, DomainConverter<ProductPremiumSARateEntity> {
+public final class ProductPremiumSARate implements Domain  {
 	private String calculationAge;
 	private Map<String, String> productPremiumSARateIndicators;
 
@@ -28,10 +25,4 @@ public final class ProductPremiumSARate implements Domain, DomainConverter<Produ
 		return new HashMap<>(productPremiumSARateIndicators);
 	}
 
-	@Override
-	public ProductPremiumSARateEntity convert(Object... args) {
-		ProductPrimaryKey pk = (ProductPrimaryKey) args[0];
-		return new ProductPremiumSARateEntity(pk.insuranceTenant(), pk.productCategory(), pk.productCode(),
-				pk.productType(), getCalculationAge(), getProductPremiumSARateIndicators());
-	}
 }

@@ -1,14 +1,11 @@
 package com.danielang.elastic.productfacility.domain;
 
-import com.danielang.elastic.productfacility.db.entity.ProductInformationEntity;
-import com.danielang.elastic.productfacility.db.entity.ProductPrimaryKey;
-
 /**
  * @program: awsurance-product-facility
  * @author: Daniel
  * @create: 2025-05-19 16:44
  **/
-public final class ProductInformation implements Domain, DomainConverter<ProductInformationEntity> {
+public final class ProductInformation implements Domain  {
 	private String productName;
 	private String productAbbrevName;
 	private String productDescription;
@@ -31,10 +28,4 @@ public final class ProductInformation implements Domain, DomainConverter<Product
 		return productDescription;
 	}
 
-	@Override
-	public ProductInformationEntity convert(Object... args) {
-		ProductPrimaryKey pk = (ProductPrimaryKey) args[0];
-		return new ProductInformationEntity(pk.insuranceTenant(), pk.productCategory(), pk.productCode(),
-				pk.productType(), getProductName(), getProductAbbrevName(), getProductDescription());
-	}
 }

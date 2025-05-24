@@ -8,7 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.model.TransactWriteItemsEnhancedRequest;
+import software.amazon.awssdk.enhanced.dynamodb.model.TransactPutItemEnhancedRequest;
 
 /**
  * @program: awsurance-product-facility
@@ -41,33 +41,43 @@ public final class ProductDynamodbRepository implements ProductRepository {
 	public void save(ProductEntity productEntity, ProductInformationEntity productInformationEntity,
 			ProductPremiumSARateEntity productPremiumSARateEntity, ProductSaleEntity productSaleEntity) {
 		// all product info should be saved in the same transaction
-		dynamoEnhancedClient.transactWriteItems(
-				TransactWriteItemsEnhancedRequest.builder().addUpdateItem(productEntityTable, productEntity)
-						.addUpdateItem(productInformationEntityTable, productInformationEntity)
-						.addUpdateItem(productPremiumSARateEntityTable, productPremiumSARateEntity)
-						.addUpdateItem(productSaleEntityTable, productSaleEntity).build());
+		dynamoEnhancedClient.transactWriteItems(b -> b.addPutItem(productEntityTable,
+						TransactPutItemEnhancedRequest.builder(ProductEntity.class).item(productEntity).build())
+				.addPutItem(productInformationEntityTable,
+						TransactPutItemEnhancedRequest.builder(ProductInformationEntity.class)
+								.item(productInformationEntity).build()).addPutItem(productPremiumSARateEntityTable,
+						TransactPutItemEnhancedRequest.builder(ProductPremiumSARateEntity.class)
+								.item(productPremiumSARateEntity).build()).addPutItem(productSaleEntityTable,
+						TransactPutItemEnhancedRequest.builder(ProductSaleEntity.class).item(productSaleEntity)
+								.build()));
 
 		//todo log all updated field values
 	}
 
 	@Override
-	public boolean update(ProductEntity productEntity) {
-		return false;
+	public ProductEntity findByInsuranceTenantAndProductCode(String insuranceTenant, String productCode) {
+		ProductEntity productEntity = new ProductEntity(insuranceTenant, productCode);
+		return productEntityTable.getItem(productEntity);
 	}
 
 	@Override
-	public boolean update(ProductInformationEntity productInformationEntity) {
-		return false;
+	public ProductInformationEntity findInformationByInsuranceTenantAndProductCode(String insuranceTenant,
+			String productCode) {
+		ProductInformationEntity productInformationEntity = new ProductInformationEntity(insuranceTenant, productCode);
+		return productInformationEntityTable.getItem(productInformationEntity);
 	}
 
 	@Override
-	public boolean update(ProductPremiumSARateEntity productPremiumSARateEntity) {
-		return false;
+	public ProductPremiumSARateEntity findPremiumSARateByInsuranceTenantAndProductCode(String insuranceTenant,
+			String productCode) {
+		ProductPremiumSARateEntity productPremiumSARateEntity = new ProductPremiumSARateEntity(insuranceTenant,
+				productCode);
+		return productPremiumSARateEntityTable.getItem(productPremiumSARateEntity);
 	}
 
 	@Override
-	public boolean update(ProductSaleEntity productSaleEntity) {
-		return false;
+	public ProductSaleEntity findSaleByInsuranceTenantAndProductCode(String insuranceTenant, String productCode) {
+		ProductSaleEntity productSaleEntity = new ProductSaleEntity(insuranceTenant, productCode);
+		return productSaleEntityTable.getItem(productSaleEntity);
 	}
-
 }

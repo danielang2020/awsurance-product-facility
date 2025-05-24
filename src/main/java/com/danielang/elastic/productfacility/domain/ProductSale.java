@@ -1,8 +1,5 @@
 package com.danielang.elastic.productfacility.domain;
 
-import com.danielang.elastic.productfacility.db.entity.ProductPrimaryKey;
-import com.danielang.elastic.productfacility.db.entity.ProductSaleEntity;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +8,7 @@ import java.util.Map;
  * @author: Daniel
  * @create: 2025-05-19 16:46
  **/
-public final class ProductSale implements Domain, DomainConverter<ProductSaleEntity> {
+public final class ProductSale implements Domain {
 	private String productCurrency;
 	private long productStartDate;
 	private long productEndDate;
@@ -39,13 +36,6 @@ public final class ProductSale implements Domain, DomainConverter<ProductSaleEnt
 
 	public Map<String, String> getProductSaleIndicators() {
 		return new HashMap<>(productSaleIndicators);
-	}
-
-	@Override
-	public ProductSaleEntity convert(Object... args) {
-		ProductPrimaryKey pk = (ProductPrimaryKey) args[0];
-		return new ProductSaleEntity(pk.insuranceTenant(), pk.productCategory(), pk.productCode(), pk.productType(),
-				getProductCurrency(), getProductStartDate(), getProductEndDate(), getProductSaleIndicators());
 	}
 
 }

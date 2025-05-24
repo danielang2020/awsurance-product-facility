@@ -23,13 +23,18 @@ public final class ProductInformationEntity extends DynamoDBEntity {
 	public ProductInformationEntity() {
 	}
 
-	public ProductInformationEntity(String insuranceTenant, String productCategory, String productCode,
-			String productType, String productName, String productAbbrevName, String productDescription) {
-		this.pk = buildPartitionKey(insuranceTenant, productCategory, productCode, productType);
+	public ProductInformationEntity(String insuranceTenant, String productCode, String productName,
+			String productAbbrevName, String productDescription) {
+		this.pk = buildPartitionKey(insuranceTenant, productCode);
 		this.sk = buildSortKey(SK_SUFFIX);
 		this.productName = productName;
 		this.productAbbrevName = productAbbrevName;
 		this.productDescription = productDescription;
+	}
+
+	public ProductInformationEntity(String insuranceTenant, String productCode) {
+		this.pk = buildPartitionKey(insuranceTenant, productCode);
+		this.sk = buildSortKey(SK_SUFFIX);
 	}
 
 	@DynamoDbPartitionKey

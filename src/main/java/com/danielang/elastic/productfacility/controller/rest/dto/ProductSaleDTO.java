@@ -1,6 +1,5 @@
 package com.danielang.elastic.productfacility.controller.rest.dto;
 
-import com.danielang.elastic.productfacility.domain.ProductSale;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.util.Map;
@@ -17,10 +16,6 @@ public record ProductSaleDTO(
 		@Schema(name = "productStartDate", description = "product start date, timestamp", required = true, examples = "1746973733000", maxLength = 13) long productStartDate,
 		@Schema(name = "productEndDate", description = "product end date, timestamp", required = true, examples = "1746973733000", maxLength = 13) long productEndDate,
 		@Schema(name = "productSaleIndicators", description = "product sale information indicators", comment = "keys in PRODUCT_SALE_INDICATOR allowed", examples = "{\"DPI_INDICATOR\":\"Non-DPI\", \"PRODUCT_TYPE_FOR_CHANGE_BENEFITS\":\"Traditional\", \"MAS_CLASSIFICATION\":\"Term\"}") Map<String, String> productSaleIndicators)
-		implements DTO, DTOConverter<ProductSale> {
+		implements DTO {
 
-	@Override
-	public ProductSale convert() {
-		return new ProductSale(productCurrency, productStartDate, productEndDate, productSaleIndicators);
-	}
 }

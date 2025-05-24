@@ -22,12 +22,17 @@ public final class ProductPremiumSARateEntity extends DynamoDBEntity {
 	private Map<String, String> productPremiumSARateIndicators;
 
 
-	public ProductPremiumSARateEntity(String insuranceTenant, String productCategory, String productCode,
-			String productType, String calculationAge, Map<String, String> productPremiumSARateIndicators) {
-		this.pk = buildPartitionKey(insuranceTenant, productCategory, productCode, productType);
+	public ProductPremiumSARateEntity(String insuranceTenant, String productCode, String calculationAge,
+			Map<String, String> productPremiumSARateIndicators) {
+		this.pk = buildPartitionKey(insuranceTenant, productCode);
 		this.sk = buildSortKey(SK_SUFFIX);
 		this.calculationAge = calculationAge;
 		this.productPremiumSARateIndicators = Map.copyOf(productPremiumSARateIndicators);
+	}
+
+	public ProductPremiumSARateEntity(String insuranceTenant, String productCode) {
+		this.pk = buildPartitionKey(insuranceTenant, productCode);
+		this.sk = buildSortKey(SK_SUFFIX);
 	}
 
 

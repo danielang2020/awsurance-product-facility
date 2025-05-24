@@ -20,16 +20,25 @@ public final class ProductEntity extends DynamoDBEntity {
 	private List<String> productSections;
 	private String pk;
 	private String sk;
+	private String productCategory;
+	private String productType;
 
 	public ProductEntity() {
 	}
 
-	public ProductEntity(String insuranceTenant, String productCategory, String productCode, String productType,
+	public ProductEntity(String insuranceTenant, String productCode, String productCategory, String productType,
 			List<String> specialCollectionFields, List<String> productSections) {
-		this.pk = buildPartitionKey(insuranceTenant, productCategory, productCode, productType);
+		this.pk = buildPartitionKey(insuranceTenant, productCode);
 		this.sk = buildSortKey(SK_SUFFIX);
 		this.specialCollectionFields = List.copyOf(specialCollectionFields);
 		this.productSections = List.copyOf(productSections);
+		this.productCategory = productCategory;
+		this.productType = productType;
+	}
+
+	public ProductEntity(String insuranceTenant, String productCode) {
+		this.pk = buildPartitionKey(insuranceTenant, productCode);
+		this.sk = buildSortKey(SK_SUFFIX);
 	}
 
 	@DynamoDbPartitionKey
@@ -64,5 +73,21 @@ public final class ProductEntity extends DynamoDBEntity {
 
 	public void setProductSections(List<String> productSections) {
 		this.productSections = productSections;
+	}
+
+	public String getProductCategory() {
+		return productCategory;
+	}
+
+	public void setProductCategory(String productCategory) {
+		this.productCategory = productCategory;
+	}
+
+	public String getProductType() {
+		return productType;
+	}
+
+	public void setProductType(String productType) {
+		this.productType = productType;
 	}
 }

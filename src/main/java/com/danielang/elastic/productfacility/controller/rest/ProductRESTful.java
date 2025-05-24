@@ -1,7 +1,14 @@
 package com.danielang.elastic.productfacility.controller.rest;
 
 import com.danielang.elastic.productfacility.controller.rest.dto.ProductDTO;
+import com.danielang.elastic.productfacility.convert.ProductInformationMapper;
+import com.danielang.elastic.productfacility.convert.ProductMapper;
+import com.danielang.elastic.productfacility.convert.ProductPremiumSARateMapper;
+import com.danielang.elastic.productfacility.convert.ProductSaleMapper;
 import com.danielang.elastic.productfacility.domain.Product;
+import com.danielang.elastic.productfacility.domain.ProductInformation;
+import com.danielang.elastic.productfacility.domain.ProductPremiumSARate;
+import com.danielang.elastic.productfacility.domain.ProductSale;
 import com.danielang.elastic.productfacility.service.ProductService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -17,24 +24,45 @@ import jakarta.ws.rs.core.MediaType;
 public class ProductRESTful {
 	private final ProductService productService;
 
-	public ProductRESTful(ProductService productService) {
+	private final ProductMapper productMapper;
+	private final ProductInformationMapper productInformationMapper;
+	private final ProductPremiumSARateMapper productPremiumSARateMapper;
+	private final ProductSaleMapper productSaleMapper;
+
+	public ProductRESTful(ProductService productService, ProductMapper productMapper,
+			ProductInformationMapper productInformationMapper, ProductPremiumSARateMapper productPremiumSARateMapper,
+			ProductSaleMapper productSaleMapper) {
 		this.productService = productService;
+		this.productMapper = productMapper;
+		this.productInformationMapper = productInformationMapper;
+		this.productPremiumSARateMapper = productPremiumSARateMapper;
+		this.productSaleMapper = productSaleMapper;
 	}
 
 	@POST
 	public void createProduct(ProductDTO productDTO) {
-		Product product = productDTO.convert();
+		Product product = productMapper.toDomain(productDTO);
+		ProductInformation productInformation = productInformationMapper.toDomain(productDTO.productInformationDTO());
+		ProductPremiumSARate productPremiumSARate = productPremiumSARateMapper.toDomain(
+				productDTO.productPremiumSARateDTO());
+		ProductSale productSale = productSaleMapper.toDomain(productDTO.productSaleDTO());
+		product.setProductInformation(productInformation);
+		product.setProductPremiumSARate(productPremiumSARate);
+		product.setProductSale(productSale);
 		productService.createProductEntity(product);
 	}
 
-	@PUT
-	public void updateProduct(ProductDTO productDTO) {
+	@Path("/{insuranceTenant}/{productCode}/{productSections}")
+	@GET
+	public void getProduct(@PathParam("insuranceTenant") String insuranceTenant,
+			@PathParam("productCode") String productCode, @PathParam("productSections") String productSections) {
 
 	}
 
-	@Path("/{productCode}")
-	@DELETE
-	public void deleteProduct(String productCode) {
+	@Path("/{insuranceTenant}/{productCode}")
+	@GET
+	public void getProduct(@PathParam("insuranceTenant") String insuranceTenant,
+			@PathParam("productCode") String productCode) {
 
 	}
 }

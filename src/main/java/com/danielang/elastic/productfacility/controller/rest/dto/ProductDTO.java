@@ -1,6 +1,5 @@
 package com.danielang.elastic.productfacility.controller.rest.dto;
 
-import com.danielang.elastic.productfacility.domain.Product;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -28,13 +27,6 @@ public record ProductDTO(
 		@JsonProperty("productInformation") ProductInformationDTO productInformationDTO,
 		@JsonProperty("productSale") ProductSaleDTO productSaleDTO,
 		@JsonProperty("productPremiumSARate") ProductPremiumSARateDTO productPremiumSARateDTO)
-		implements DTO, DTOConverter<Product> {
+		implements DTO {
 
-
-	@Override
-	public Product convert() {
-		return new Product(specialCollectionFields, productSections, insuranceTenant, productCategory, productCode,
-				productType, productInformationDTO.convert(), productSaleDTO.convert(),
-				productPremiumSARateDTO.convert());
-	}
 }

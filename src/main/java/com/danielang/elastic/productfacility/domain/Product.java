@@ -1,8 +1,6 @@
 package com.danielang.elastic.productfacility.domain;
 
 
-import com.danielang.elastic.productfacility.db.entity.ProductEntity;
-import com.danielang.elastic.productfacility.db.entity.ProductPrimaryKey;
 import com.danielang.elastic.productfacility.domain.enums.ProductSection;
 
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import java.util.List;
  * @author: Daniel
  * @create: 2025-03-14 23:05
  **/
-public final class Product implements Domain, DomainConverter<ProductEntity> {
+public final class Product implements Domain {
 	private List<String> specialCollectionFields;
 	private List<String> productSections;
 	private String insuranceTenant;
@@ -26,8 +24,8 @@ public final class Product implements Domain, DomainConverter<ProductEntity> {
 	private ProductSale productSale;
 	private ProductPremiumSARate productPremiumSARate;
 
-	public Product(List<String> specialCollectionFields, List<String> productSections, String insuranceTenant,
-			String productCategory, String productCode, String productType, ProductInformation productInformation,
+	public Product(String insuranceTenant, String productCategory, String productCode, String productType,
+			List<String> specialCollectionFields, List<String> productSections, ProductInformation productInformation,
 			ProductSale productSale, ProductPremiumSARate productPremiumSARate) {
 		this.specialCollectionFields = new ArrayList<>(specialCollectionFields);
 		this.productSections = new ArrayList<>(productSections);
@@ -68,12 +66,24 @@ public final class Product implements Domain, DomainConverter<ProductEntity> {
 		return productInformation;
 	}
 
+	public void setProductInformation(ProductInformation productInformation) {
+		this.productInformation = productInformation;
+	}
+
 	public ProductSale getProductSale() {
 		return productSale;
 	}
 
+	public void setProductSale(ProductSale productSale) {
+		this.productSale = productSale;
+	}
+
 	public ProductPremiumSARate getProductPremiumSARate() {
 		return productPremiumSARate;
+	}
+
+	public void setProductPremiumSARate(ProductPremiumSARate productPremiumSARate) {
+		this.productPremiumSARate = productPremiumSARate;
 	}
 
 	@Override
@@ -92,15 +102,5 @@ public final class Product implements Domain, DomainConverter<ProductEntity> {
 				productPremiumSARate.validate();
 			}
 		});
-	}
-
-	@Override
-	public ProductEntity convert(Object... args) {
-		return new ProductEntity(getInsuranceTenant(), getProductCategory(), getProductCode(), getProductType(),
-				getSpecialCollectionFields(), getProductSections());
-	}
-
-	public ProductPrimaryKey getProductPrimaryKey() {
-		return new ProductPrimaryKey(getInsuranceTenant(), getProductCategory(), getProductCode(), getProductType());
 	}
 }
