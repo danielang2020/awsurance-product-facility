@@ -7,5 +7,5 @@ package com.danielang.elastic.productfacility.controller.rest.dto;
  **/
 public sealed interface DTO
 		permits CommonResponseDetailDTO, ProductDTO, ProductInformationDTO, ProductPremiumSARateDTO, ProductSaleDTO,
-		ResponseDTO, VoidDTO {
+		ResponseDTO {
 }

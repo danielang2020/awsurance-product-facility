@@ -2,7 +2,6 @@ package com.danielang.elastic.productfacility.controller.rest;
 
 import com.danielang.elastic.productfacility.controller.rest.dto.ProductDTO;
 import com.danielang.elastic.productfacility.controller.rest.dto.ResponseDTO;
-import com.danielang.elastic.productfacility.controller.rest.dto.VoidDTO;
 import com.danielang.elastic.productfacility.convert.ProductInformationMapper;
 import com.danielang.elastic.productfacility.convert.ProductMapper;
 import com.danielang.elastic.productfacility.convert.ProductPremiumSARateMapper;
@@ -42,7 +41,7 @@ public class ProductRESTful {
 	}
 
 	@POST
-	public ResponseDTO<VoidDTO> createProduct(ProductDTO productDTO) {
+	public ResponseDTO<ProductDTO> createProduct(ProductDTO productDTO) {
 		Product product = productMapper.toDomain(productDTO);
 		ProductInformation productInformation = productInformationMapper.toDomain(
 				productDTO.getProductInformationDTO());
@@ -54,7 +53,7 @@ public class ProductRESTful {
 		product.setProductSale(productSale);
 		productService.createProductEntity(product);
 
-		return new ResponseDTO<>(ResponseDTO.OK, null, new VoidDTO());
+		return new ResponseDTO<>(ResponseDTO.OK, null, productDTO);
 	}
 
 	@Path("/{insuranceTenant}/{productCode}/{productSections}")
