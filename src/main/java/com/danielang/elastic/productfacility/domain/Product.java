@@ -2,6 +2,7 @@ package com.danielang.elastic.productfacility.domain;
 
 
 import com.danielang.elastic.productfacility.domain.enums.ProductSection;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @author: Daniel
  * @create: 2025-03-14 23:05
  **/
+@Data
 public final class Product implements Domain {
 	private List<String> specialCollectionFields;
 	private List<String> productSections;
@@ -27,8 +29,9 @@ public final class Product implements Domain {
 	public Product(String insuranceTenant, String productCategory, String productCode, String productType,
 			List<String> specialCollectionFields, List<String> productSections, ProductInformation productInformation,
 			ProductSale productSale, ProductPremiumSARate productPremiumSARate) {
-		this.specialCollectionFields = new ArrayList<>(specialCollectionFields);
-		this.productSections = new ArrayList<>(productSections);
+		this.specialCollectionFields =
+				specialCollectionFields != null ? new ArrayList<>(specialCollectionFields) : new ArrayList<>(0);
+		this.productSections = productSections != null ? new ArrayList<>(productSections) : new ArrayList<>(0);
 		this.insuranceTenant = insuranceTenant;
 		this.productCategory = productCategory;
 		this.productCode = productCode;
@@ -52,62 +55,6 @@ public final class Product implements Domain {
 
 	public void setProductSections(List<String> productSections) {
 		this.productSections = new ArrayList<>(productSections);
-	}
-
-	public String getInsuranceTenant() {
-		return insuranceTenant;
-	}
-
-	public void setInsuranceTenant(String insuranceTenant) {
-		this.insuranceTenant = insuranceTenant;
-	}
-
-	public String getProductCategory() {
-		return productCategory;
-	}
-
-	public void setProductCategory(String productCategory) {
-		this.productCategory = productCategory;
-	}
-
-	public String getProductCode() {
-		return productCode;
-	}
-
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
-	}
-
-	public String getProductType() {
-		return productType;
-	}
-
-	public void setProductType(String productType) {
-		this.productType = productType;
-	}
-
-	public ProductInformation getProductInformation() {
-		return productInformation;
-	}
-
-	public void setProductInformation(ProductInformation productInformation) {
-		this.productInformation = productInformation;
-	}
-
-	public ProductSale getProductSale() {
-		return productSale;
-	}
-
-	public void setProductSale(ProductSale productSale) {
-		this.productSale = productSale;
-	}
-
-	public ProductPremiumSARate getProductPremiumSARate() {
-		return productPremiumSARate;
-	}
-
-	public void setProductPremiumSARate(ProductPremiumSARate productPremiumSARate) {
-		this.productPremiumSARate = productPremiumSARate;
 	}
 
 	@Override

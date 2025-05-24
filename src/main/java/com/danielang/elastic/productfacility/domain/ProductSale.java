@@ -1,5 +1,7 @@
 package com.danielang.elastic.productfacility.domain;
 
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import java.util.Map;
  * @author: Daniel
  * @create: 2025-05-19 16:46
  **/
+@Data
 public final class ProductSale implements Domain {
 	private String productCurrency;
 	private long productStartDate;
@@ -19,20 +22,10 @@ public final class ProductSale implements Domain {
 		this.productCurrency = productCurrency;
 		this.productStartDate = productStartDate;
 		this.productEndDate = productEndDate;
-		this.productSaleIndicators = new HashMap<>(productSaleIndicators);
+		this.productSaleIndicators =
+				productSaleIndicators != null ? new HashMap<>(productSaleIndicators) : new HashMap<>(0);
 	}
 
-	public String getProductCurrency() {
-		return productCurrency;
-	}
-
-	public long getProductStartDate() {
-		return productStartDate;
-	}
-
-	public long getProductEndDate() {
-		return productEndDate;
-	}
 
 	public Map<String, String> getProductSaleIndicators() {
 		return new HashMap<>(productSaleIndicators);

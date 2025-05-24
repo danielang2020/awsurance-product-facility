@@ -2,8 +2,10 @@ package com.danielang.elastic.productfacility.db.entity;
 
 import com.danielang.elastic.productfacility.db.utils.EntityUtil;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Data;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -13,6 +15,7 @@ import java.util.Map;
  **/
 @RegisterForReflection
 @DynamoDbBean
+@Data
 public final class ProductSaleEntity extends DynamoDBEntity {
 	public static final String SK_SUFFIX = "PRODUCT_SALE";
 	private String productCurrency;
@@ -33,39 +36,16 @@ public final class ProductSaleEntity extends DynamoDBEntity {
 		this.productCurrency = productCurrency;
 		this.productStartDate = productStartDate;
 		this.productEndDate = productEndDate;
-		this.productSaleIndicators = Map.copyOf(productSaleIndicators);
+		this.productSaleIndicators =
+				productSaleIndicators != null ? new HashMap<>(productSaleIndicators) : HashMap.newHashMap(0);
 	}
 
-
-	public String getProductCurrency() {
-		return productCurrency;
-	}
-
-	public void setProductCurrency(String productCurrency) {
-		this.productCurrency = productCurrency;
-	}
-
-	public long getProductStartDate() {
-		return productStartDate;
-	}
-
-	public void setProductStartDate(long productStartDate) {
-		this.productStartDate = productStartDate;
-	}
-
-	public long getProductEndDate() {
-		return productEndDate;
-	}
-
-	public void setProductEndDate(long productEndDate) {
-		this.productEndDate = productEndDate;
-	}
 
 	public Map<String, String> getProductSaleIndicators() {
-		return productSaleIndicators;
+		return new HashMap<>(productSaleIndicators);
 	}
 
 	public void setProductSaleIndicators(Map<String, String> productSaleIndicators) {
-		this.productSaleIndicators = productSaleIndicators;
+		this.productSaleIndicators = new HashMap<>(productSaleIndicators);
 	}
 }

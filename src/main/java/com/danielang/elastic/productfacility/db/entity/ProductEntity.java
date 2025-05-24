@@ -2,8 +2,10 @@ package com.danielang.elastic.productfacility.db.entity;
 
 import com.danielang.elastic.productfacility.db.utils.EntityUtil;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Data;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,6 +15,7 @@ import java.util.List;
  **/
 @RegisterForReflection
 @DynamoDbBean
+@Data
 public final class ProductEntity extends DynamoDBEntity {
 	public static final String SK_SUFFIX = "PRODUCT";
 	private List<String> specialCollectionFields;
@@ -30,41 +33,26 @@ public final class ProductEntity extends DynamoDBEntity {
 			List<String> specialCollectionFields, List<String> productSections) {
 		setPk(EntityUtil.buildProductPartitionKey(insuranceTenant, productCode));
 		setSk(EntityUtil.buildProductSortKey(SK_SUFFIX));
-		this.specialCollectionFields = List.copyOf(specialCollectionFields);
-		this.productSections = List.copyOf(productSections);
+		this.specialCollectionFields =
+				specialCollectionFields != null ? new ArrayList<>(specialCollectionFields) : new ArrayList<>(0);
+		this.productSections = productSections != null ? new ArrayList<>(productSections) : new ArrayList<>(0);
 		this.productCategory = productCategory;
 		this.productType = productType;
 	}
 
 	public List<String> getSpecialCollectionFields() {
-		return specialCollectionFields;
+		return new ArrayList<>(specialCollectionFields);
 	}
 
 	public void setSpecialCollectionFields(List<String> specialCollectionFields) {
-		this.specialCollectionFields = specialCollectionFields;
+		this.specialCollectionFields = new ArrayList<>(specialCollectionFields);
 	}
 
 	public List<String> getProductSections() {
-		return productSections;
+		return new ArrayList<>(productSections);
 	}
 
 	public void setProductSections(List<String> productSections) {
-		this.productSections = productSections;
-	}
-
-	public String getProductCategory() {
-		return productCategory;
-	}
-
-	public void setProductCategory(String productCategory) {
-		this.productCategory = productCategory;
-	}
-
-	public String getProductType() {
-		return productType;
-	}
-
-	public void setProductType(String productType) {
-		this.productType = productType;
+		this.productSections = new ArrayList<>(productSections);
 	}
 }

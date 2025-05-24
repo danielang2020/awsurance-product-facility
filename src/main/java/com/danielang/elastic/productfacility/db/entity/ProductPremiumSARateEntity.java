@@ -2,8 +2,10 @@ package com.danielang.elastic.productfacility.db.entity;
 
 import com.danielang.elastic.productfacility.db.utils.EntityUtil;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Data;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -13,18 +15,20 @@ import java.util.Map;
  **/
 @RegisterForReflection
 @DynamoDbBean
+@Data
 public final class ProductPremiumSARateEntity extends DynamoDBEntity {
 	public static final String SK_SUFFIX = "PRODUCT_PREMIUM_SA_RATE";
 	private String calculationAge;
 	private Map<String, String> productPremiumSARateIndicators;
-
 
 	public ProductPremiumSARateEntity(String insuranceTenant, String productCode, String calculationAge,
 			Map<String, String> productPremiumSARateIndicators) {
 		setPk(EntityUtil.buildProductPartitionKey(insuranceTenant, productCode));
 		setSk(EntityUtil.buildProductSortKey(SK_SUFFIX));
 		this.calculationAge = calculationAge;
-		this.productPremiumSARateIndicators = Map.copyOf(productPremiumSARateIndicators);
+		this.productPremiumSARateIndicators = productPremiumSARateIndicators != null ?
+				new HashMap<>(productPremiumSARateIndicators) :
+				HashMap.newHashMap(0);
 	}
 
 	/**
@@ -33,19 +37,11 @@ public final class ProductPremiumSARateEntity extends DynamoDBEntity {
 	public ProductPremiumSARateEntity() {
 	}
 
-	public String getCalculationAge() {
-		return calculationAge;
-	}
-
-	public void setCalculationAge(String calculationAge) {
-		this.calculationAge = calculationAge;
-	}
-
 	public Map<String, String> getProductPremiumSARateIndicators() {
-		return productPremiumSARateIndicators;
+		return new HashMap<>(productPremiumSARateIndicators);
 	}
 
 	public void setProductPremiumSARateIndicators(Map<String, String> productPremiumSARateIndicators) {
-		this.productPremiumSARateIndicators = productPremiumSARateIndicators;
+		this.productPremiumSARateIndicators = new HashMap<>(productPremiumSARateIndicators);
 	}
 }
