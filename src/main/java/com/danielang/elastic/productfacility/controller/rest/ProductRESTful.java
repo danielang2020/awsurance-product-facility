@@ -15,6 +15,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 /**
+ * product facility RESTFul api
  * @program: awsurance-product-facility
  * @author: Daniel
  * @create: 2025-05-11 20:07
