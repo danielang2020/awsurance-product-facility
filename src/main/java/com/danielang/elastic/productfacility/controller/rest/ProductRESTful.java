@@ -1,6 +1,8 @@
 package com.danielang.elastic.productfacility.controller.rest;
 
 import com.danielang.elastic.productfacility.controller.rest.dto.ProductDTO;
+import com.danielang.elastic.productfacility.controller.rest.dto.ResponseDTO;
+import com.danielang.elastic.productfacility.controller.rest.dto.VoidDTO;
 import com.danielang.elastic.productfacility.convert.ProductInformationMapper;
 import com.danielang.elastic.productfacility.convert.ProductMapper;
 import com.danielang.elastic.productfacility.convert.ProductPremiumSARateMapper;
@@ -40,29 +42,35 @@ public class ProductRESTful {
 	}
 
 	@POST
-	public void createProduct(ProductDTO productDTO) {
+	public ResponseDTO<VoidDTO> createProduct(ProductDTO productDTO) {
 		Product product = productMapper.toDomain(productDTO);
-		ProductInformation productInformation = productInformationMapper.toDomain(productDTO.productInformationDTO());
+		ProductInformation productInformation = productInformationMapper.toDomain(
+				productDTO.getProductInformationDTO());
 		ProductPremiumSARate productPremiumSARate = productPremiumSARateMapper.toDomain(
-				productDTO.productPremiumSARateDTO());
-		ProductSale productSale = productSaleMapper.toDomain(productDTO.productSaleDTO());
+				productDTO.getProductPremiumSARateDTO());
+		ProductSale productSale = productSaleMapper.toDomain(productDTO.getProductSaleDTO());
 		product.setProductInformation(productInformation);
 		product.setProductPremiumSARate(productPremiumSARate);
 		product.setProductSale(productSale);
 		productService.createProductEntity(product);
+
+		return new ResponseDTO<>(ResponseDTO.OK, null, new VoidDTO());
 	}
 
 	@Path("/{insuranceTenant}/{productCode}/{productSections}")
 	@GET
-	public void getProduct(@PathParam("insuranceTenant") String insuranceTenant,
+	public ResponseDTO<ProductDTO> getProduct(@PathParam("insuranceTenant") String insuranceTenant,
 			@PathParam("productCode") String productCode, @PathParam("productSections") String productSections) {
-
+		ProductDTO productDTO = productService.getProductEntity(insuranceTenant, productCode, productSections);
+		return new ResponseDTO<>(ResponseDTO.OK, null, productDTO);
 	}
 
 	@Path("/{insuranceTenant}/{productCode}")
 	@GET
-	public void getProduct(@PathParam("insuranceTenant") String insuranceTenant,
+	public ResponseDTO<ProductDTO> getProduct(@PathParam("insuranceTenant") String insuranceTenant,
 			@PathParam("productCode") String productCode) {
+		ProductDTO productDTO = productService.getProductEntity(insuranceTenant, productCode, null);
 
+		return new ResponseDTO<>(ResponseDTO.OK, null, productDTO);
 	}
 }

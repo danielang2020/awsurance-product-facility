@@ -42,24 +42,48 @@ public final class Product implements Domain {
 		return new ArrayList<>(specialCollectionFields);
 	}
 
+	public void setSpecialCollectionFields(List<String> specialCollectionFields) {
+		this.specialCollectionFields = new ArrayList<>(specialCollectionFields);
+	}
+
 	public List<String> getProductSections() {
 		return new ArrayList<>(productSections);
+	}
+
+	public void setProductSections(List<String> productSections) {
+		this.productSections = new ArrayList<>(productSections);
 	}
 
 	public String getInsuranceTenant() {
 		return insuranceTenant;
 	}
 
+	public void setInsuranceTenant(String insuranceTenant) {
+		this.insuranceTenant = insuranceTenant;
+	}
+
 	public String getProductCategory() {
 		return productCategory;
+	}
+
+	public void setProductCategory(String productCategory) {
+		this.productCategory = productCategory;
 	}
 
 	public String getProductCode() {
 		return productCode;
 	}
 
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
 	public String getProductType() {
 		return productType;
+	}
+
+	public void setProductType(String productType) {
+		this.productType = productType;
 	}
 
 	public ProductInformation getProductInformation() {

@@ -5,15 +5,6 @@ package com.danielang.elastic.productfacility.db.entity;
  * @author: Daniel
  * @create: 2025-05-20 23:36
  **/
-public abstract sealed class DynamoDBEntity
+public sealed interface DynamoDBEntity
 		permits ProductEntity, ProductInformationEntity, ProductPremiumSARateEntity, ProductSaleEntity {
-	public static final String SK_PREFIX = "LATEST#";
-
-	protected String buildPartitionKey(String insuranceTenant, String productCode) {
-		return String.format("%s#%s", insuranceTenant, productCode);
-	}
-
-	protected String buildSortKey(String skSuffix) {
-		return SK_PREFIX + skSuffix;
-	}
 }

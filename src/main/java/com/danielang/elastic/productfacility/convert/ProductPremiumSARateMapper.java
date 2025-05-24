@@ -1,8 +1,8 @@
 package com.danielang.elastic.productfacility.convert;
 
 import com.danielang.elastic.productfacility.controller.rest.dto.ProductPremiumSARateDTO;
-import com.danielang.elastic.productfacility.db.entity.DynamoDBEntity;
 import com.danielang.elastic.productfacility.db.entity.ProductPremiumSARateEntity;
+import com.danielang.elastic.productfacility.db.utils.EntityUtil;
 import com.danielang.elastic.productfacility.domain.ProductPKAndSK;
 import com.danielang.elastic.productfacility.domain.ProductPremiumSARate;
 import org.mapstruct.*;
@@ -17,12 +17,13 @@ public interface ProductPremiumSARateMapper {
 	ProductPremiumSARateDTO toDTO(ProductPremiumSARate productPremiumSARate);
 
 	ProductPremiumSARate toDomain(ProductPremiumSARateDTO productPremiumSARateDTO);
+	ProductPremiumSARate toDomain(ProductPremiumSARateEntity productPremiumSARateEntity);
 
 	@Mapping(target = "pk", expression = "java(context.getPk())")
 	ProductPremiumSARateEntity toEntity(ProductPremiumSARate productPremiumSARate, @Context ProductPKAndSK context);
 
 	@AfterMapping
 	default void setPKAndSK(@MappingTarget ProductPremiumSARateEntity target) {
-		target.setSk(DynamoDBEntity.SK_PREFIX + ProductPremiumSARateEntity.SK_SUFFIX);
+		target.setSk(EntityUtil.SK_PREFIX + ProductPremiumSARateEntity.SK_SUFFIX);
 	}
 }

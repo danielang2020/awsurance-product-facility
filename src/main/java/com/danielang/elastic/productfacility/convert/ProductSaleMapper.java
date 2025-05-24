@@ -1,8 +1,8 @@
 package com.danielang.elastic.productfacility.convert;
 
 import com.danielang.elastic.productfacility.controller.rest.dto.ProductSaleDTO;
-import com.danielang.elastic.productfacility.db.entity.DynamoDBEntity;
 import com.danielang.elastic.productfacility.db.entity.ProductSaleEntity;
+import com.danielang.elastic.productfacility.db.utils.EntityUtil;
 import com.danielang.elastic.productfacility.domain.ProductPKAndSK;
 import com.danielang.elastic.productfacility.domain.ProductSale;
 import org.mapstruct.*;
@@ -18,11 +18,13 @@ public interface ProductSaleMapper {
 
 	ProductSale toDomain(ProductSaleDTO productSaleDTO);
 
+	ProductSale toDomain(ProductSaleEntity productSaleEntity);
+
 	@Mapping(target = "pk", expression = "java(context.getPk())")
 	ProductSaleEntity toEntity(ProductSale productSale, @Context ProductPKAndSK context);
 
 	@AfterMapping
 	default void setPKAndSK(@MappingTarget ProductSaleEntity target) {
-		target.setSk(DynamoDBEntity.SK_PREFIX + ProductSaleEntity.SK_SUFFIX);
+		target.setSk(EntityUtil.SK_PREFIX + ProductSaleEntity.SK_SUFFIX);
 	}
 }

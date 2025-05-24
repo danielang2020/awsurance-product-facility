@@ -1,5 +1,6 @@
 package com.danielang.elastic.productfacility.service;
 
+import com.danielang.elastic.productfacility.controller.rest.dto.ProductDTO;
 import com.danielang.elastic.productfacility.convert.ProductInformationMapper;
 import com.danielang.elastic.productfacility.convert.ProductMapper;
 import com.danielang.elastic.productfacility.convert.ProductPremiumSARateMapper;
@@ -52,10 +53,11 @@ public class ProductService {
 		productRepository.save(productEntity, productInformationEntity, productPremiumSARateEntity, productSaleEntity);
 	}
 
-	public void getProductEntity(String insuranceTenant, String productCode, String productSections) {
+	public ProductDTO getProductEntity(String insuranceTenant, String productCode, String productSections) {
+		ProductEntity productEntity = productRepository.findByInsuranceTenantAndProductCode(insuranceTenant,
+				productCode);
+		Product product = productMapper.toDomain(productEntity);
 		if (productSections == null) {
-			ProductEntity productEntity = productRepository.findByInsuranceTenantAndProductCode(insuranceTenant,
-					productCode);
 			ProductInformationEntity productInformationEntity = productRepository.findInformationByInsuranceTenantAndProductCode(
 					insuranceTenant, productCode);
 			ProductPremiumSARateEntity productPremiumSARateEntity = productRepository.findPremiumSARateByInsuranceTenantAndProductCode(
@@ -63,16 +65,48 @@ public class ProductService {
 			ProductSaleEntity productSaleEntity = productRepository.findSaleByInsuranceTenantAndProductCode(
 					insuranceTenant, productCode);
 
+			product.setProductInformation(productInformationMapper.toDomain(productInformationEntity));
+			product.setProductPremiumSARate(productPremiumSARateMapper.toDomain(productPremiumSARateEntity));
+			product.setProductSale(productSaleMapper.toDomain(productSaleEntity));
+
+			ProductDTO productDTO = productMapper.toDTO(product);
+			productDTO.setProductInformationDTO(productInformationMapper.toDTO(product.getProductInformation()));
+			productDTO.setProductPremiumSARateDTO(productPremiumSARateMapper.toDTO(product.getProductPremiumSARate()));
+			productDTO.setProductSaleDTO(productSaleMapper.toDTO(product.getProductSale()));
+
+			return productDTO;
 		} else {
+			ProductDTO productDTO = productMapper.toDTO(product);
 			switch (ProductSection.valueOf(productSections.toUpperCase())) {
-				case PRODUCT_INFORMATION ->
-						productRepository.findInformationByInsuranceTenantAndProductCode(insuranceTenant, productCode);
-				case PRODUCT_PREMIUM_SA_RATE ->
-						productRepository.findPremiumSARateByInsuranceTenantAndProductCode(insuranceTenant,
-								productCode);
-				case PRODUCT_SALE ->
-						productRepository.findSaleByInsuranceTenantAndProductCode(insuranceTenant, productCode);
+				case PRODUCT_INFORMATION -> {
+					ProductInformationEntity productInformationEntity = productRepository.findInformationByInsuranceTenantAndProductCode(
+							insuranceTenant, productCode);
+					product.setProductInformation(productInformationMapper.toDomain(productInformationEntity));
+
+					productDTO.setProductInformationDTO(
+							productInformationMapper.toDTO(product.getProductInformation()));
+					return productDTO;
+				}
+				case PRODUCT_PREMIUM_SA_RATE -> {
+					ProductPremiumSARateEntity productPremiumSARateEntity = productRepository.findPremiumSARateByInsuranceTenantAndProductCode(
+							insuranceTenant, productCode);
+					product.setProductPremiumSARate(productPremiumSARateMapper.toDomain(productPremiumSARateEntity));
+
+					productDTO.setProductPremiumSARateDTO(
+							productPremiumSARateMapper.toDTO(product.getProductPremiumSARate()));
+					return productDTO;
+				}
+				case PRODUCT_SALE -> {
+					ProductSaleEntity productSaleEntity = productRepository.findSaleByInsuranceTenantAndProductCode(
+							insuranceTenant, productCode);
+					product.setProductSale(productSaleMapper.toDomain(productSaleEntity));
+
+					productDTO.setProductSaleDTO(productSaleMapper.toDTO(product.getProductSale()));
+					return productDTO;
+				}
 			}
+
+			throw new IllegalArgumentException("Invalid product section: " + productSections);
 		}
 	}
 }

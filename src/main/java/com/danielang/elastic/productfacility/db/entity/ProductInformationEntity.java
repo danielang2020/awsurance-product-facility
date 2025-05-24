@@ -1,5 +1,6 @@
 package com.danielang.elastic.productfacility.db.entity;
 
+import com.danielang.elastic.productfacility.db.utils.EntityUtil;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
@@ -12,7 +13,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
  **/
 @RegisterForReflection
 @DynamoDbBean
-public final class ProductInformationEntity extends DynamoDBEntity {
+public final class ProductInformationEntity implements DynamoDBEntity {
 	public static final String SK_SUFFIX = "PRODUCT_INFORMATION";
 	private String pk;
 	private String sk;
@@ -20,21 +21,19 @@ public final class ProductInformationEntity extends DynamoDBEntity {
 	private String productAbbrevName;
 	private String productDescription;
 
+	/**
+	 * warning: default constructor is required by DynamoDB and mapstruct, don't use it in biz logic.
+	 */
 	public ProductInformationEntity() {
 	}
 
 	public ProductInformationEntity(String insuranceTenant, String productCode, String productName,
 			String productAbbrevName, String productDescription) {
-		this.pk = buildPartitionKey(insuranceTenant, productCode);
-		this.sk = buildSortKey(SK_SUFFIX);
+		this.pk = EntityUtil.buildProductPartitionKey(insuranceTenant, productCode);
+		this.sk = EntityUtil.buildProductSortKey(SK_SUFFIX);
 		this.productName = productName;
 		this.productAbbrevName = productAbbrevName;
 		this.productDescription = productDescription;
-	}
-
-	public ProductInformationEntity(String insuranceTenant, String productCode) {
-		this.pk = buildPartitionKey(insuranceTenant, productCode);
-		this.sk = buildSortKey(SK_SUFFIX);
 	}
 
 	@DynamoDbPartitionKey

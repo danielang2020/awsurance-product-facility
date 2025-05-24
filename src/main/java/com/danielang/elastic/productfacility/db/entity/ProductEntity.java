@@ -1,5 +1,6 @@
 package com.danielang.elastic.productfacility.db.entity;
 
+import com.danielang.elastic.productfacility.db.utils.EntityUtil;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
@@ -14,7 +15,7 @@ import java.util.List;
  **/
 @RegisterForReflection
 @DynamoDbBean
-public final class ProductEntity extends DynamoDBEntity {
+public final class ProductEntity implements DynamoDBEntity {
 	public static final String SK_SUFFIX = "PRODUCT";
 	private List<String> specialCollectionFields;
 	private List<String> productSections;
@@ -23,22 +24,20 @@ public final class ProductEntity extends DynamoDBEntity {
 	private String productCategory;
 	private String productType;
 
+	/**
+	 * warning: default constructor is required by DynamoDB and mapstruct, don't use it in biz logic.
+	 */
 	public ProductEntity() {
 	}
 
 	public ProductEntity(String insuranceTenant, String productCode, String productCategory, String productType,
 			List<String> specialCollectionFields, List<String> productSections) {
-		this.pk = buildPartitionKey(insuranceTenant, productCode);
-		this.sk = buildSortKey(SK_SUFFIX);
+		this.pk = EntityUtil.buildProductPartitionKey(insuranceTenant, productCode);
+		this.sk = EntityUtil.buildProductSortKey(SK_SUFFIX);
 		this.specialCollectionFields = List.copyOf(specialCollectionFields);
 		this.productSections = List.copyOf(productSections);
 		this.productCategory = productCategory;
 		this.productType = productType;
-	}
-
-	public ProductEntity(String insuranceTenant, String productCode) {
-		this.pk = buildPartitionKey(insuranceTenant, productCode);
-		this.sk = buildSortKey(SK_SUFFIX);
 	}
 
 	@DynamoDbPartitionKey

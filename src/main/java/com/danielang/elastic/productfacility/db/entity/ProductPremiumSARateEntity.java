@@ -1,5 +1,6 @@
 package com.danielang.elastic.productfacility.db.entity;
 
+import com.danielang.elastic.productfacility.db.utils.EntityUtil;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
@@ -14,7 +15,7 @@ import java.util.Map;
  **/
 @RegisterForReflection
 @DynamoDbBean
-public final class ProductPremiumSARateEntity extends DynamoDBEntity {
+public final class ProductPremiumSARateEntity implements DynamoDBEntity {
 	public static final String SK_SUFFIX = "PRODUCT_PREMIUM_SA_RATE";
 	private String pk;
 	private String sk;
@@ -24,18 +25,15 @@ public final class ProductPremiumSARateEntity extends DynamoDBEntity {
 
 	public ProductPremiumSARateEntity(String insuranceTenant, String productCode, String calculationAge,
 			Map<String, String> productPremiumSARateIndicators) {
-		this.pk = buildPartitionKey(insuranceTenant, productCode);
-		this.sk = buildSortKey(SK_SUFFIX);
+		this.pk = EntityUtil.buildProductPartitionKey(insuranceTenant, productCode);
+		this.sk = EntityUtil.buildProductSortKey(SK_SUFFIX);
 		this.calculationAge = calculationAge;
 		this.productPremiumSARateIndicators = Map.copyOf(productPremiumSARateIndicators);
 	}
 
-	public ProductPremiumSARateEntity(String insuranceTenant, String productCode) {
-		this.pk = buildPartitionKey(insuranceTenant, productCode);
-		this.sk = buildSortKey(SK_SUFFIX);
-	}
-
-
+	/**
+	 * warning: default constructor is required by DynamoDB and mapstruct, don't use it in biz logic.
+	 */
 	public ProductPremiumSARateEntity() {
 	}
 
