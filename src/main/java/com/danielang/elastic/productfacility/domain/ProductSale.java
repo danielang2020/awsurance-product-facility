@@ -23,7 +23,7 @@ public final class ProductSale implements Domain {
 		this.productStartDate = productStartDate;
 		this.productEndDate = productEndDate;
 		this.productSaleIndicators =
-				productSaleIndicators != null ? new HashMap<>(productSaleIndicators) : new HashMap<>(0);
+				productSaleIndicators != null ? new HashMap<>(productSaleIndicators) : HashMap.newHashMap(0);
 	}
 
 

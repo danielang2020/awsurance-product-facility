@@ -19,7 +19,7 @@ public final class ProductPremiumSARate implements Domain {
 		this.calculationAge = calculationAge;
 		this.productPremiumSARateIndicators = productPremiumSARateIndicators != null ?
 				new HashMap<>(productPremiumSARateIndicators) :
-				new HashMap<>(0);
+				HashMap.newHashMap(0);
 	}
 
 	public Map<String, String> getProductPremiumSARateIndicators() {
