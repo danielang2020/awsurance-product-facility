@@ -1,6 +1,7 @@
 package com.danielang.elastic.productfacility.controller.rest.dto;
 
 /**
+ * DTO interface
  * @program: awsurance-product-facility
  * @author: Daniel
  * @create: 2025-05-20 23:28
