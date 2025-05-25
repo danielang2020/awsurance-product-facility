@@ -16,10 +16,11 @@ jobs:
       - name: Set up JDK 24
         uses: graalvm/setup-graalvm@v1
         with:
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           java-version: '24-ea'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: true
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
