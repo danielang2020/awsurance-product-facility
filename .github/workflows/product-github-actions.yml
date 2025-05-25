@@ -65,8 +65,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-            app=awsurance-product-facility
+          tags: app:awsurance-product-facility
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
